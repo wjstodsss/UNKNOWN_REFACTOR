@@ -1,0 +1,121 @@
+ @charset "UTF-8";
+
+ body {
+        font-family: Arial, sans-serif;
+    }
+    .content_area {
+        display: flex;
+        margin-top: 20px;
+        width:1200px;
+    }
+    .sideList {
+        width: 20%;
+        height: 340px;
+        min-width: 200px;
+        padding-right: 20px;
+        background-color: #f9f9f9;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    .sideListTitle {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    .sideList ul {
+        list-style: none;
+        padding: 0;
+    }
+    .sideList ul li {
+        margin-bottom: 10px;
+    }
+    .sideList ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+    .sideList ul li a:hover {
+        text-decoration: underline;
+    }
+    .main_content {
+        width: 80%;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .page-header {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    .panel-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+    .panel-body {
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .table th, .table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .pagination {
+        margin: 0;
+        padding: 10px;
+        list-style: none;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination li {
+        margin: 0 5px;
+    }
+    .pagination a {
+        color: #ff6a00;
+        text-decoration: none;
+    }
+    .pagination .active a {
+        font-weight: bold;
+    }
+    #regBtn {
+        float: right;
+    }
+    .row{
+    	float: right;
+    }

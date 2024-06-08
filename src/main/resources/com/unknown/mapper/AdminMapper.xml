@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.AdminMapper">
+
+	<!-- 상품 등록 -->
+	<insert id="itemEnroll" parameterType="com.unknown.model.ItemVO"
+		useGeneratedKeys="true" keyProperty="itemId">
+		<selectKey resultType="int" keyProperty="itemId"
+			order="BEFORE">
+			SELECT seq_itemId.nextval FROM dual
+		</selectKey>
+		insert into tbl_item(
+		itemId, itemName, brandId, mnfcYear,
+		manufacturer, cateCode,
+		itemPrice, itemStock, itemDiscount, itemIntro,
+		itemContents
+		)
+		values(
+		#{itemId}, #{itemName}, #{brandId}, #{mnfcYear},
+		#{manufacturer}, #{cateCode},
+		#{itemPrice}, #{itemStock},
+		#{itemDiscount}, #{itemIntro},
+		#{itemContents}
+		)
+	</insert>
+
+
+
+	<!-- 카테고리 리스트 -->
+	<select id="cateList" resultType="com.unknown.model.CateVO">
+
+		select * from tbl_itemcate
+		order
+		by cateCode
+
+	</select>
+
+	<!-- 상품 리스트 -->
+	<select id="goodsGetList" resultType="com.unknown.model.ItemVO">
+  	
+	  	<![CDATA[
+		select * from(
+		    select /*+INDEX_DESC(tbl_item SYS_C007551)*/ rownum as rn, itemId, itemName,
+		        (select brandName from tbl_brand where tbl_item.brandId = tbl_brand.brandId) brandName,
+		        (select cateName from tbl_itemcate where tbl_item.cateCode = tbl_itemcate.cateCode) cateName,itemStock,regDate
+		    from tbl_item 
+		    where 
+		]]>
+
+		<if test="keyword != null">
+
+			itemName like '%' || #{keyword} || '%' and
+
+		</if>
+		     
+		<![CDATA[    
+		    rownum <= #{pageNum} * #{amount} 
+		    )
+		where rn > (#{pageNum} -1) * #{amount}		  	
+  		]]>
+
+	</select>
+
+	<!-- 상품 총 개수 -->
+	<select id="goodsGetTotal" resultType="int">
+
+		select count(*) from tbl_item
+
+		<if test="keyword != null">
+
+			where itemName like '%' || #{keyword} || '%'
+		</if>
+
+	</select>
+
+	<!-- 상품 조회 페이지 -->
+	<select id="goodsGetDetail"
+		resultType="com.unknown.model.ItemVO">
+
+		select itemId, itemName, (select brandName from tbl_brand
+		where brandId
+		=tbl_item.brandId) brandName,
+		brandId, mnfcYear,
+		manufacturer, cateCode, itemPrice, itemStock, itemDiscount,
+		itemIntro,
+		itemContents, regDate, updateDate
+		from tbl_item where itemId =
+		#{itemId}
+
+	</select>
+
+	<!-- 상품 정보 수정 -->
+	<update id="goodsModify">
+
+		update tbl_item set itemName = #{itemName}, brandId
+		=
+		#{brandId},
+		mnfcYear = #{mnfcYear},
+		manufacturer = #{manufacturer},
+		cateCode = #{cateCode},
+		itemPrice = #{itemPrice},
+		itemStock =
+		#{itemStock},
+		itemDiscount = #{itemDiscount},
+		itemIntro = #{itemIntro},
+		itemContents = #{itemContents},
+		updateDate = sysdate
+		where itemId =
+		#{itemId}
+
+	</update>
+
+	<!-- 상품 정보 삭제 -->
+	<delete id="goodsDelete">
+
+		delete from tbl_item where itemId = #{itemId}
+
+	</delete>
+
+	<!-- 이미지 등록 -->
+	<insert id="imageEnroll"
+		parameterType="com.unknown.model.AttachImageVO">
+		insert into tbl_itemimage(itemId, fileName, uploadPath,
+		uuid)
+		values (#{itemId}, #{fileName}, #{uploadPath}, #{uuid})
+	</insert>
+
+
+	<!-- 어제자 날짜 이미지 리스트 -->
+	<select id="checkFileList"
+		resultType="com.unknown.model.AttachImageVO">
+
+		select * from tbl_itemimage where uploadpath =
+		to_char(sysdate -1, 'yyyy\mm\dd')
+
+	</select>
+
+	<!-- 지정 상품 이미지 정보 얻기 -->
+	<select id="getAttachInfo"
+		resultType="com.unknown.model.AttachImageVO">
+
+		select * from tbl_itemimage where itemId = #{itemId}
+
+	</select>
+
+	<!-- 주문 리스트 -->
+	<select id="getOrderList"
+		resultType="com.unknown.model.OrderDTO">
+		<![CDATA[
+		select * 
+		from(
+		    select rownum rn, orderId, memberId, orderstate, orderdate
+		    from tbl_order
+		    where rownum <= #{pageNum} * #{amount} 
+		]]>
+		<if test="keyword != null">
+			and memberId like '%'||#{keyword}||'%'
+		</if>
+		<![CDATA[
+		    
+		    order by orderdate desc
+		    )
+		where rn > (#{pageNum} -1) * #{amount}
+		]]>
+	</select>
+
+	<!-- 상품 총 개수 -->
+	<select id="getOrderTotal" resultType="int">
+
+		select count(*) from tbl_order
+
+		<if test="keyword != null">
+			where memberId like '%'||#{keyword}||'%'
+		</if>
+
+	</select>
+
+	<!-- 지정 상품 이미지 삭제 -->
+	<delete id="deleteImageAll" parameterType="int">
+		DELETE FROM tbl_itemimage WHERE itemId = #{itemId}
+	</delete>
+
+
+
+</mapper>

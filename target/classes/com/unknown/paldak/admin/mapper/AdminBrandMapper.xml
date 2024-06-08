@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminBrandMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.BrandVO">
+        select * from tbl_brand where brandId > 0 order by brandId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.BrandVO">
+        <selectKey keyProperty="brandId" order="BEFORE" resultType="long">
+            select seq_brandId.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_brand (brandId, brandName, brandIntro)
+        VALUES (
+        #{brandId},
+        #{brandName},
+        #{brandIntro}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.BrandVO">
+        select * from tbl_brand where brandId = #{brandId}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_brand where brandId = #{brandId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.BrandVO">
+        update tbl_brand 
+        set brandName=#{brandName}, brandIntro=#{brandIntro}, updateDate = #{updateDate}
+        where brandId=#{brandId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							brandName like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							brandId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.BrandVO">
+        <![CDATA[
+            select * 
+            from (
+            select rownum rn, brandId, brandName, brandIntro, regDate, updateDate
+            from (select * from tbl_brand order by
+            ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'brandName'">
+		            <![CDATA[ brandName ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ brandId ]]>
+		        </otherwise>
+		     </choose>
+			          
+	        <![CDATA[
+	        		 asc)
+	            where 
+	        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.BrandVO">
+          <![CDATA[
+            select * 
+            from (
+            select rownum rn, brandId, brandName, brandIntro, regDate, updateDate
+            from (select * from tbl_brand order by ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'brandName'">
+		            <![CDATA[ brandName ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ brandId ]]>
+		        </otherwise>
+		     </choose>
+		     <![CDATA[
+		     desc)
+	            where 
+		      ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_brand where
+		<include refid="criterial"></include>
+		 brandId > 0
+</select>
+</mapper>

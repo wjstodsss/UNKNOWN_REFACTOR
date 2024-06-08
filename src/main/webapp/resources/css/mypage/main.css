@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.detail_area {
+    width: 820px;
+    height: 2018px;
+    position: relative;
+    float: right;
+    padding: 20px;
+}
+
+.content_area {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.welcome_message h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.order_summary, .recent_viewed_products, .reviews, .product_reviews, .one_to_one_inquiry {
+    margin-bottom: 40px;
+}
+
+.order_summary h3, .recent_viewed_products h3, .reviews h3, .product_reviews h3, .one_to_one_inquiry h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 15px; /* Add padding to push the text down */
+}
+
+/* New CSS for additional info section */
+.additional_info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px; /* 여백 조정 */
+}
+
+.user_info {
+    display: flex;
+    align-items: center; /* 요소들을 수평으로 나열 */
+    width: 40%;
+    border-radius: 6px; /* border-radius 추가 */
+    background-color: #f9f9f9; /* 배경색 추가 */
+    padding: 10px; /* 여백 추가 */
+}
+
+.user_info img {
+    width: 60px;
+    height: 62px; /* 이미지 크기 60x62로 설정 */
+    margin-right: 20px; /* 이미지 오른쪽 여백 추가 */
+}
+
+.user_details {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 나열 */
+}
+
+.user_info span {
+    margin-bottom: 10px; /* 텍스트 아래 여백 추가 */
+}
+
+.button-container {
+    display: flex; /* 버튼들을 가로로 나열 */
+    gap: 10px; /* 버튼들 사이에 간격 추가 */
+    margin-bottom: 10px; /* 버튼 아래 여백 추가 */
+}
+
+.user_info .custom-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #ff7f50; /* Coral color for border */
+    background-color: white;
+    color: #ff7f50;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.user_info .custom-button:hover {
+    background-color: #ff7f50;
+    color: white;
+}
+
+.user_info .custom-button:nth-child(2) {
+    border-color: #ccc; /* Light grey for the second button */
+    color: #555;
+}
+
+.user_info .custom-button:nth-child(2):hover {
+    background-color: #ccc;
+    color: white;
+}
+
+.user_info .req_amount {
+    margin-top: 10px; /* 요소 간 여백 추가 */
+}
+
+.membership_button {
+    border-radius: 6px; /* border-radius 추가 */
+    background-color: #FF542A; /* 배경색 추가 */
+    color: white; /* 글씨색 추가 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    width: 146px; /* 너비 설정 */
+    height: 129px; /* 높이 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.membership_button .orange_member {
+    border: none;
+    background: none;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+.order_status {
+    display: flex;
+    gap: 20px;
+}
+
+.status_box {
+    width: 146px;
+    height: 129px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 6px; /* border-radius 추가 */
+    background-color: #f9f9f9; /* 배경색 추가 */
+}
+
+.status_box p {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.status_box span {
+    font-size: 20px;
+    color: orange;
+}

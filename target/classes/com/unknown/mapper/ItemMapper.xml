@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.ItemMapper">
+	<!-- criteria(검색조건) -->
+	<sql id="criteria">
+
+		<trim prefix="(" suffix=") AND" prefixOverrides="AND">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="AND">
+					<choose>
+						<when test="type == 'A'.toString()">
+							<trim prefixOverrides="or">
+								<foreach item="brandId" collection="brandArr">
+									<trim prefix="or">
+										brandId = #{brandId}
+									</trim>
+								</foreach>
+							</trim>
+						</when>
+						<when test="type == 'C'.toString()">
+							cateCode like '%' || #{cateCode} || '%'
+						</when>
+						<when test="type == 'T'.toString()">
+							itemName like '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+
+	</sql>
+
+
+	<!-- 상품 검색 -->
+	<select id="getGoodsList" resultType="com.unknown.model.ItemVO">
+	
+		<![CDATA[
+		    select * from(
+		        select /*+INDEX_DESC(tbl_item 인덱스ID)*/ rownum as rn, itemId, itemName,
+		            (select brandName from tbl_brand where tbl_item.brandId = tbl_brand.brandId) brandName, brandId,
+		            (select cateName from tbl_itemcate where tbl_item.cateCode = tbl_itemcate.cateCode) cateName, cateCode, manufacturer, mnfcYear, itemPrice, itemDiscount  
+		        from tbl_item
+		        where 
+	    ]]>
+
+		<include refid="criteria"></include>
+	    
+	    <![CDATA[
+	    		        
+		        rownum <= #{pageNum} * #{amount} 
+	        	)
+	        where rn > (#{pageNum} -1) * #{amount}
+		]]>
+
+	</select>
+
+	<!-- 상품 총 개수 -->
+	<select id="goodsGetTotal" resultType="int">
+
+		select count(*) from tbl_item
+		where
+		<include refid="criteria"></include>
+		itemId >0
+
+	</select>
+
+	<!-- 브랜드 id 리스트 요청 -->
+	<select id="getBrandIdList" resultType="String">
+
+		select brandId
+		from
+		tbl_brand
+		where brandName like '%' || #{keyword} || '%'
+
+	</select>
+
+	<!-- 상품 정보 -->
+	<select id="getGoodsInfo" resultType="com.unknown.model.ItemVO">
+
+		select a.ITEMID,
+		a.ITEMNAME, a.BRANDID, b.BRANDNAME, a.MNFCYEAR,
+		a.MANUFACTURER,
+		a.CATECODE, c.CATENAME, a.ITEMPRICE, a.ITEMSTOCK,
+		a.ITEMDISCOUNT,
+		a.ITEMINTRO, a.ITEMCONTENTS
+		from tbl_item a left outer join tbl_brand b
+		on a.brandId = b.brandId
+		left outer join tbl_itemcate c on a.cateCode =
+		c.cateCode
+		where itemId = ${itemId}
+
+	</select>
+
+	<!-- 모든 상품 리스트 -->
+	<select id="getAllItems" resultType="com.unknown.model.ItemVO">
+		SELECT *
+		FROM tbl_item
+	</select>
+
+	<!-- 카테고리 기준 상품 리스트 출력 -->
+	<select id="getItemsByCateCode" parameterType="string"
+		resultType="com.unknown.model.ItemVO">
+		SELECT *
+		FROM tbl_item
+		WHERE cateCode = #{cateCode}
+	</select>
+
+	<!-- 카테고리 범위 기준 상품 리스트 출력 -->
+	<select id="getItemsByCateRange"
+		resultType="com.unknown.model.ItemVO">
+		SELECT *
+		FROM tbl_item
+		WHERE cateCode
+		BETWEEN #{startCode}
+		AND
+		#{endCode}
+	</select>
+
+	<select id="getBottomRankedItems"
+		resultType="com.unknown.model.ItemVO">
+		SELECT i.itemid AS itemId, i.itemname AS itemName,
+		i.itemprice AS itemPrice,
+		i.itemdiscount AS itemDiscount, b.brandname
+		AS brandName,
+		NVL(SUM(o.itemcount), 0) AS totalSales
+		FROM tbl_item i
+		LEFT JOIN tbl_orderitem o ON i.itemid = o.itemid
+		LEFT JOIN tbl_brand b
+		ON i.brandid = b.brandid
+		GROUP BY i.itemid, i.itemname, i.itemprice,
+		i.itemdiscount, b.brandname
+		ORDER BY totalSales ASC
+	</select>
+
+	<select id="getItemsByName"
+		resultType="com.unknown.model.ItemVO">
+		SELECT *
+		FROM tbl_item
+		WHERE itemName LIKE '%' || #{keyword}
+		|| '%'
+	</select>
+
+	<select id="getItemsByBrandId"
+		resultType="com.unknown.model.ItemVO">
+		SELECT *
+		FROM tbl_item
+		WHERE brandId = #{brandId}
+	</select>
+
+
+</mapper>

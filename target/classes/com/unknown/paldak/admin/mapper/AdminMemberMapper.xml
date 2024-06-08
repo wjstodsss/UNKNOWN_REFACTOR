@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminMemberMapper">
+	<select id="getList"
+		resultType="com.unknown.paldak.admin.domain.MemberVO">
+		select * from tbl_member where memberId > 0 order by memberId desc
+	</select>
+	<insert id="insert"
+		parameterType="com.unknown.paldak.admin.domain.MemberVO">
+
+		insert into tbl_member(memberId, memberPw, memberName, memberPhone, memberMail,
+		memberAddr1, memberAddr2, memberAddr3, adminCk, regDate, point, suspended, withdrawal)
+		values (
+		#{memberId},
+		#{memberPw},
+		#{memberName},
+		#{memberPhone},
+		#{memberMail},
+		#{memberAddr1},
+		#{memberAddr2},
+		#{memberAddr3},
+		#{adminCk},
+		#{regDate},
+		#{point},
+		#{suspended},
+		#{withdrawal}
+		)
+	</insert>
+
+	<select id="readByStringId" parameterType="String"
+		resultType="com.unknown.paldak.admin.domain.MemberVO">
+		select * from tbl_member where memberId = #{memberId}
+	</select>
+
+	<delete id="deleteByStringId" parameterType="String">
+		delete from tbl_member where memberId = #{memberId}
+	</delete>
+
+	<update id="update"
+		parameterType="com.unknown.paldak.admin.domain.MemberVO">
+		update tbl_member
+		set adminCk=#{adminCk}, suspended=#{suspended}, withdrawal=#{withdrawal}	
+		where memberId=#{memberId}
+	</update>
+	
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							LOWER(memberName) like '%'||LOWER(#{keyword})||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							memberId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'M'.toString()">
+							memberMail like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+  	<update id="updateWithdrawal" parameterType="com.unknown.paldak.admin.domain.MemberVO">
+	    update tbl_member
+	    set withdrawal = #{withdrawal}
+	    where memberId = #{memberId}
+	</update>
+
+	<select id="getListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultType="com.unknown.paldak.admin.domain.MemberVO">
+        <![CDATA[
+            select *
+            from (
+            	select rownum rn, memberId, memberName, memberMail, regDate, memberPhone, suspended, withdrawal
+            from (select * from tbl_member order by memberId asc)
+            where
+        ]]>
+             <include refid="criterial"></include>
+             
+        <![CDATA[ 
+             rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+	</select>
+
+	<select id="getDescListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultType="com.unknown.paldak.admin.domain.MemberVO">
+    <![CDATA[ 
+        select *
+            from (
+            	select rownum rn, memberId, memberName, memberMail, regDate, memberPhone, suspended, withdrawal
+            from (select * from tbl_member order by memberId desc)
+            where
+        ]]>
+             <include refid="criterial"></include>
+             
+        <![CDATA[ 
+             rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_member where
+		<include refid="criterial"></include>
+		 memberId is not null
+	</select>
+
+</mapper>

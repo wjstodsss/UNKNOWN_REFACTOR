@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminQnaReplyMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        select * from tbl_qna_reply where replyId > 0 order by replyId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        <selectKey keyProperty="replyId" order="BEFORE" resultType="long">
+            select seq_qna_reply.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_qna_reply (replyId, qnaId, reply, replyer, answer)
+        VALUES (
+        #{replyId},
+        #{qnaId},
+        #{reply},
+        #{replyer},
+        #{answer}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        select * from tbl_qna_reply where replyId = #{replyId}
+    </select>
+    
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_qna_reply where replyId = #{replyId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        update tbl_qna_reply 
+        set reply=#{reply}, replyUpdateDate=#{replyUpdateDate}
+        where replyId=#{replyId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							qnaId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'A'.toString()">
+							replyTypeId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'M'.toString()">
+							replyId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        <![CDATA[
+            select replyId, qnaId, reply, replyer, replyDate, replyUpdateDate, answer 
+            from (
+            select /*+INDEX_DESC(tbl_qna_reply pk_qna_reply) */ rownum rn, replyId, qnaId, reply, replyer, replyDate, replyUpdateDate, answer
+            from (select * from tbl_qna_reply order by replyId asc)
+            where 
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        <![CDATA[
+            select replyId, qnaId, reply, replyer, replyDate, replyUpdateDate, answer 
+            from (
+            select /*+INDEX_DESC(tbl_qna_reply pk_qna_reply) */ rownum rn, replyId, qnaId, reply, replyer, replyDate, replyUpdateDate, answer
+            from (select * from tbl_qna_reply order by replyId desc)
+            where  
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="readByQnaId" parameterType="long" resultType="com.unknown.paldak.admin.domain.QNAReplyVO">
+        select * from tbl_qna_reply where qnaId = #{qnaId}
+    </select>
+    
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_qna_reply where
+		<include refid="criterial"></include>
+		 replyId > 0
+</select>
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminCartMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.CartVO">
+        select * from tbl_cart where cartId > 0 order by cartId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.CartVO">
+        <selectKey keyProperty="cartId" order="BEFORE" resultType="long">
+            select seq_cartId.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_cart (cartId, memberId, itemId, itemCount)
+        VALUES (
+        #{cartId},
+        #{memberId},
+        #{itemId},
+        #{itemCount}
+        )
+    </insert>
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'M'.toString()">
+							memberId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							cartId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+     <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.CartVO">
+        <![CDATA[
+          SELECT * FROM (
+            SELECT c.*
+            from (
+            SELECT rownum rn, c.cartId, c.memberId, c.itemId, c.itemCount, i.itemName
+            from tbl_cart c
+            LEFT JOIN tbl_item i ON c.itemId = i.itemId
+            order by
+            ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'memberId'">
+		            <![CDATA[ c.memberId ]]>
+		        </when>
+		        <when test="sortColumn != null and sortColumn == 'itemId'">
+		            <![CDATA[ c.itemId ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ c.cartId ]]>
+		        </otherwise>
+		     </choose>
+			          
+	        <![CDATA[
+	        		 asc) c
+	            where 
+	        ]]>
+            <include refid="criterial"></include>
+          <![CDATA[ 
+              rownum <=  #{pageNum} * #{amount}
+              ) where rn > (#{pageNum}-1) * #{amount}
+          ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.CartVO">
+                 <![CDATA[
+          SELECT * FROM (
+            SELECT c.*
+            from (
+            SELECT rownum rn, c.cartId, c.memberId, c.itemId, c.itemCount, i.itemName
+            from tbl_cart c
+            LEFT JOIN tbl_item i ON c.itemId = i.itemId
+            order by
+            ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'memberId'">
+		            <![CDATA[ c.memberId ]]>
+		        </when>
+		        <when test="sortColumn != null and sortColumn == 'itemId'">
+		            <![CDATA[ c.itemId ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ c.cartId ]]>
+		        </otherwise>
+		     </choose>
+			          
+	        <![CDATA[
+	        		 desc) c
+	            where 
+	        ]]>
+            <include refid="criterial"></include>
+          <![CDATA[ 
+              rownum <=  #{pageNum} * #{amount}
+              ) where rn > (#{pageNum}-1) * #{amount}
+          ]]>
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_cart where
+		<include refid="criterial"></include>
+		 cartId > 0
+</select>
+</mapper>

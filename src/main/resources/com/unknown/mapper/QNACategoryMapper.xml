@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.QNACategoryMapper">
+	<select id="getAllCategory" resultType="com.unknown.model.QNACategoryVO">
+		select * from tbl_qna_category where
+		categoryId > 0 order by categoryId asc
+	
+	</select>
+	
+	<!-- 특정 ID로 카테고리 가져오는 SQL -->
+    <select id="getCategoryById" parameterType="Long" resultType="com.unknown.model.QNACategoryVO">
+        SELECT categoryId, categoryValue
+        FROM tbl_qna_category
+        WHERE categoryId = #{categoryId}
+    </select>
+    
+</mapper>

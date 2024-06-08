@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/unknown/controller/BenefitsReplyController.java=UTF-8
+encoding//src/main/java/com/unknown/controller/ItemController.java=UTF-8
+encoding//src/main/java/com/unknown/controller/QNAReplyController.java=UTF-8
+encoding//src/main/java/com/unknown/model/ReviewReplyVO.java=UTF-8
+encoding//src/main/java/com/unknown/service/ReviewReplyService.java=UTF-8
+encoding//src/main/java/com/unknown/service/ReviewReplyServiceImpl.java=UTF-8
+encoding//src/main/java/com/unknown/util/FileUploadManager.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/product=UTF-8
+encoding//src/test/java/com/unknown/mapper/BrandMapperTests.java=UTF-8
+encoding//src/test/java/com/unknown/mapper/MemberMapperTests.java=UTF-8

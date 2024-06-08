@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.ReviewMapper">
+	<select id="getList" resultType="com.unknown.model.ReviewVO">
+		select * from tbl_review where
+		reviewId > 0 order by reviewId desc
+	</select>
+	<insert id="insert">
+		insert into tbl_review (reviewId, reviewTitle,
+		itemId, reviewWriter,
+		reviewContent, reviewImageURL)
+		values
+		(seq_review.nextval, #{reviewTitle}, #{itemId}, #{reviewWriter},
+		#{reviewContent}, #{reviewImageURL})
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="reviewId" order="BEFORE"
+			resultType="long">
+			select seq_review.nextval from dual
+		</selectKey>
+
+		insert into tbl_review (reviewId, reviewTitle , itemId, reviewWriter,
+		reviewContent, reviewImageURL)
+		values
+		(#{reviewId}, #{reviewTitle},
+		#{itemId}, #{reviewWriter}, #{reviewContent}, #{reviewImageURL} )
+	</insert>
+
+	<select id="read" resultType="com.unknown.model.ReviewVO">
+		SELECT r.*, i.itemName
+		FROM
+		tbl_review r
+		LEFT JOIN tbl_item i ON r.itemId = i.itemId
+		WHERE
+		r.reviewId = #{reviewId}
+	</select>
+
+	<delete id="delete">
+		delete from tbl_review where reviewId = #{reviewId}
+	</delete>
+
+	<update id="update">
+		update tbl_review
+		set reviewTitle = #{reviewTitle },
+		reviewContent=
+		#{reviewContent},
+		reviewImageURL=#{reviewImageURL},
+		reviewUpdateDate = sysdate
+		where
+		reviewId = #{reviewId}
+	</update>
+
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							reviewTitle like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							reviewContent like '%'||#{keyword}||'%'
+						</when>
+
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+	<select id="getListWithPaging"
+		resultType="com.unknown.model.ReviewVO">
+    <![CDATA[ 
+        select reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL,reviewRegdate, reviewUpdateDate from ( 
+        select /*+INDEX_DESC(tbl_review pk_review) */ rownum rn, reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL,
+        reviewRegdate, reviewUpdateDate from tbl_review where ]]>
+		<include refid="criterial"></include>
+        <![CDATA[
+        rownum <= #{pageNum} * #{amount}
+        ) where rn > (#{pageNum} -1) * #{amount}
+    ]]>
+
+	</select>
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_review where
+		<include refid="criterial"></include>
+		reviewId > 0
+	</select>
+
+	<select id="getListByItemId"
+		resultType="com.unknown.model.ReviewVO">
+		SELECT * FROM tbl_review WHERE itemId = #{itemId} ORDER BY
+		reviewId DESC
+	</select>
+
+	<select id="getListByMemberId"
+		resultType="com.unknown.model.ReviewVO">
+    <![CDATA[
+        SELECT * FROM(
+            SELECT rownum rn, t.* FROM tbl_review t WHERE reviewWriter = #{memberId} ORDER BY reviewId DESC
+        ) WHERE rownum <= #{pageNum} * #{amount}
+        AND rn > (#{pageNum} -1) * #{amount}
+    ]]>
+	</select>
+
+	<select id="getTotalByMemberId" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		tbl_review
+		WHERE reviewWriter = #{memberId}
+	</select>
+
+	<select id="getItemNameById" resultType="string">
+		SELECT itemName FROM tbl_item WHERE itemId = #{itemId}
+	</select>
+
+	<select id="getReviewWriterByReviewId" resultType="string">
+		SELECT reviewWriter FROM tbl_review WHERE reviewId = #{reviewId}
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminAttachMapper">
+	
+	<insert id="insertImageInfo"
+		parameterType="com.unknown.paldak.admin.domain.AttachImageVO">
+		INSERT INTO tbl_itemimage 
+		VALUES (
+		#{itemId},
+		#{fileName},
+		#{uploadPath},
+		#{uuid}
+		)
+	</insert>
+
+	 <delete id="deleteWithFile" parameterType="long">
+        delete from tbl_itemimage where itemId = #{itemId}
+    </delete>
+
+	<update id="update"
+		parameterType="com.unknown.paldak.admin.domain.AttachImageVO">
+		update tbl_itemimage
+		set fileName=#{fileName}, uploadPath=#{uploadPath}, uuid=#{uuid}
+		where itemId=#{itemId}
+	</update>
+</mapper>

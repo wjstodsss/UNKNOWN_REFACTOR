@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+.detail_area h1 {
+	font-size: 24px;
+}
+
+.detail_area form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.detail_area label {
+    margin-right: 10px;
+}
+
+.detail_area input[type="date"] {
+    width: 160px;
+    height: 42px;
+    margin-right: 10px;
+}
+
+.detail_area #dateForm {
+    margin-top:20px;
+}
+
+.filter_buttons {
+    margin-bottom: 20px;
+}
+
+.date_range_button {
+    width: 50px;
+    height: 32px;
+    margin-right: 5px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.date_range_button.active {
+    background-color: #6666;
+    color: white;
+}
+
+.filter_button {
+    width: 63px;
+    height: 42px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.thick_line {
+    border: 2px solid #000;
+    margin: 20px 0;
+}
+
+.order_list {
+    margin-top: 20px;
+}
+
+.order_item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.order_header, .order_body, .order_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order_date {
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+.order_id {
+    font-size: 11pt;
+    margin-left: 10px;
+}
+
+.order_detail_button, .address_change_button {
+    font-size: 13px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.order_body {
+    margin-top: 10px;
+    display: flex;
+}
+
+.order_image img {
+    width: 50px;
+    height: 50px;
+}
+
+.order_info {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.order_status {
+    font-size: 16pt;
+    color: orange;
+}
+
+.order_name {
+    font-size: 14pt;
+}
+
+.order_brand {
+    font-size: 14pt;
+}
+
+.order_price {
+    text-align: right;
+}
+
+.order_footer {
+    margin-top: 10px;
+}

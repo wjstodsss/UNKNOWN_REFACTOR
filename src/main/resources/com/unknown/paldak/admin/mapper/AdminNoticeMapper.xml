@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminNoticeMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.NoticeVO">
+        select * from tbl_notice where noticeId > 0 order by noticeId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.NoticeVO">
+        <selectKey keyProperty="noticeId" order="BEFORE" resultType="long">
+            select seq_notice.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_notice (noticeId, noticeTitle, noticeDescription, noticeBrand, noticeImageURL)
+        VALUES (
+        #{noticeId},
+        #{noticeTitle},
+        #{noticeDescription},
+        #{noticeBrand},
+        #{noticeImageURL}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.NoticeVO">
+        select * from tbl_notice where noticeId = #{noticeId}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_notice where noticeId = #{noticeId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.NoticeVO">
+        update tbl_notice 
+        set noticeTitle=#{noticeTitle}, noticeDescription=#{noticeDescription}, noticeBrand=#{noticeBrand}, noticeImageURL=#{noticeImageURL}, noticeUpdateDate=#{noticeUpdateDate}
+        where noticeId=#{noticeId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							noticeTitle like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'D'.toString()">
+							noticeDescription like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							noticeId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.NoticeVO">
+        <![CDATA[
+            select noticeId, noticeTitle, noticeDescription, noticeBrand, noticeImageURL, noticeRegdate, noticeUpdateDate 
+            from (
+            select rownum rn, noticeId, noticeTitle, noticeDescription, noticeBrand, noticeImageURL, noticeRegdate, noticeUpdateDate
+            from (select * from tbl_notice order by noticeId asc)
+            where 
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.NoticeVO">
+        <![CDATA[
+            select noticeId, noticeTitle, noticeDescription, noticeBrand, noticeImageURL, noticeRegdate, noticeUpdateDate from (
+            select rownum rn, noticeId, noticeTitle, noticeDescription, noticeBrand, noticeImageURL, noticeRegdate, noticeUpdateDate
+            from (select * from tbl_notice order by noticeId desc)
+            where 
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_notice where
+		<include refid="criterial"></include>
+		 noticeId > 0
+</select>
+</mapper>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminDashboardMapper">
+
+    <select id="getTodayRegistrations" resultType="com.unknown.paldak.admin.domain.DashboardVO">
+     <![CDATA[
+        SELECT TO_CHAR(regDate, 'YYYY-MM-DD') AS regdateMem, COUNT(*) AS memberCount
+        FROM tbl_member
+        WHERE TRUNC(regDate) = TRUNC(SYSDATE)
+        GROUP BY TO_CHAR(regDate, 'YYYY-MM-DD')
+        ORDER BY regdateMem
+        ]]>
+    </select>
+    
+
+    <select id="getThisMonthRegistrations" resultType="com.unknown.paldak.admin.domain.DashboardVO">
+     <![CDATA[
+        SELECT TO_CHAR(regDate, 'YYYY-MM') AS regmonthMem, COUNT(*) AS memberCount
+        FROM tbl_member
+        WHERE TRUNC(regDate, 'MM') = TRUNC(SYSDATE, 'MM')
+        GROUP BY TO_CHAR(regDate, 'YYYY-MM')
+        ORDER BY regmonthMem
+        ]]>
+    </select>
+    
+
+    <select id="getDailyOrderCount" resultType="com.unknown.paldak.admin.domain.DashboardVO">
+     <![CDATA[
+        SELECT TO_CHAR(orderDate, 'YYYY-MM-DD') AS orderDate, COUNT(*) AS orderCount
+        FROM tbl_order
+        WHERE TRUNC(orderDate) = TRUNC(SYSDATE)
+        GROUP BY TO_CHAR(orderDate, 'YYYY-MM-DD')
+        ORDER BY orderDate
+        ]]>
+    </select>
+
+    <select id="getMonthlyOrderCount" resultType="com.unknown.paldak.admin.domain.DashboardVO">
+     <![CDATA[
+        SELECT TO_CHAR(orderDate, 'YYYY-MM') AS orderMonth, COUNT(*) AS orderCount
+        FROM tbl_order
+        WHERE TRUNC(orderDate, 'MM') = TRUNC(SYSDATE, 'MM')
+        GROUP BY TO_CHAR(orderDate, 'YYYY-MM')
+        ORDER BY orderMonth
+        ]]>
+    </select>
+
+	<select id="getNewItemsCount" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) as itemCount
+	    FROM tbl_item
+	    WHERE TRUNC(regDate, 'MM') = TRUNC(SYSDATE, 'MM')
+	    ]]>
+	</select>
+	
+
+	<select id="getTotalItemsCount" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) as itemCount
+	    FROM tbl_item
+	    ]]>
+	</select>
+
+	<select id="getReviewCountToday" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) AS reviewCount
+	    FROM tbl_review
+	    WHERE TRUNC(reviewregdate) = TRUNC(SYSDATE)
+	    ]]>
+	</select>
+	
+	<select id="getPendingReviewCount" resultType="int">
+	 <![CDATA[
+	    SELECT 
+	        (SELECT COUNT(*) FROM tbl_review) - 
+	        (SELECT COUNT(*) FROM tbl_review_reply WHERE answer = 'Y') AS pendingCount
+	    FROM dual
+	    ]]>
+	</select>
+
+	<select id="getQnaCountToday" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) AS qnaCount
+	    FROM tbl_qna
+	    WHERE TRUNC(qnaRegdate) = TRUNC(SYSDATE)
+	    ]]>
+	</select>
+	
+
+	<select id="getPendingQnaCount" resultType="int">
+	 <![CDATA[
+	    SELECT 
+	        (SELECT COUNT(*) FROM tbl_qna) - 
+	        (SELECT COUNT(*) FROM tbl_qna_reply WHERE answer = 'Y') AS pendingQnaCount
+	    FROM dual
+	    ]]>
+	</select>
+	
+
+  	<select id="getItemsNeedOrderCount" resultType="int">
+	    <![CDATA[
+	        SELECT COUNT(*) as itemsNeedOrderCount
+	        FROM tbl_item
+	        WHERE itemStock <= 50
+	    ]]>
+	</select>
+
+	
+
+	<select id="getTotalOrdersCount" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) as totalOrdersCount
+	    FROM tbl_stockInfo
+	    ]]>
+	</select>
+	
+	
+	<select id="getReceivedItemsCount" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) as receivedItemsCount
+	    FROM tbl_stockInfo
+	    WHERE isReceived = 'Y'
+	    ]]>
+	</select>
+	
+
+	<select id="getWaitingItemsCount" resultType="int">
+	 <![CDATA[
+	    SELECT COUNT(*) as waitingItemsCount
+	    FROM tbl_stockInfo
+	    WHERE isReceived = 'N'
+	    ]]>
+	</select>
+	
+    <select id="getTodaySales" resultType="int">
+     <![CDATA[
+        SELECT 
+            NVL(SUM(oi.itemPrice * oi.itemCount), 0) AS TodaySales
+        FROM 
+            tbl_orderItem oi
+        JOIN 
+            tbl_order o ON oi.orderId = o.orderId
+        WHERE 
+            TRUNC(o.orderDate) = TRUNC(SYSDATE)
+            ]]>
+    </select>
+    
+    <select id="getMonthlySales" resultType="int">
+     <![CDATA[
+        SELECT 
+            NVL(SUM(oi.itemPrice * oi.itemCount),0) AS MonthlySales
+        FROM 
+            tbl_orderItem oi
+        JOIN 
+            tbl_order o ON oi.orderId = o.orderId
+        WHERE 
+            TRUNC(o.orderDate, 'MM') = TRUNC(SYSDATE, 'MM')
+            ]]>
+    </select>
+    
+     <resultMap id="topFiveSalesMap" type="java.util.Map">
+        <id property="rank" column="Rank"/>
+        <result property="itemName" column="item Name"/>
+        <result property="salesAmount" column="Sales Amount"/>
+    </resultMap>
+
+    <select id="getTodayTopFive" resultMap="topFiveSalesMap">
+        <![CDATA[
+        SELECT * FROM (
+            SELECT 
+                RANK() OVER (ORDER BY SUM(oi.itemPrice * oi.itemCount) DESC) AS "Rank",
+                i.itemName AS "item Name",
+                SUM(oi.itemPrice * oi.itemCount) AS "Sales Amount"
+            FROM 
+                tbl_orderItem oi
+            JOIN 
+                tbl_item i ON oi.itemId = i.itemId
+            JOIN 
+                tbl_order o ON oi.orderId = o.orderId
+            WHERE 
+                TRUNC(o.orderDate) = TRUNC(SYSDATE)
+            GROUP BY 
+                i.itemName
+            ORDER BY 
+                "Sales Amount" DESC
+        )
+        WHERE ROWNUM <= 5
+        ]]>
+    </select>
+    
+    <resultMap id="map" type="java.util.Map">
+        <id property="rank" column="Rank"/>
+        <result property="rank" column="rank"/>
+        <result property="itemName" column="itemName"/>
+        <result property="reviewCount" column="reviewCount"/>
+    </resultMap>
+    
+	 <select id="getTopFiveByReviewCount" resultType="map">
+		 <![CDATA[
+		    SELECT rownum AS rank, itemName, reviewCount
+		    FROM (
+		      SELECT i.itemName, COUNT(r.reviewId) AS reviewCount
+		      FROM tbl_item i
+		      LEFT JOIN tbl_review r ON i.itemId = r.itemId
+		      GROUP BY i.itemName
+		      ORDER BY reviewCount DESC
+		    )
+		    WHERE rownum <= 5
+		    ]]>
+	  </select>
+	
+</mapper>

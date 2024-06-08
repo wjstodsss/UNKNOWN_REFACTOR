@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminOrderMapper">
+	<insert id="insert"
+		parameterType="com.unknown.paldak.admin.domain.OrderVO">
+		insert into tbl_order(orderId, receiver, memberId,
+		memberAddr1, memberAddr2, memberAddr3, shipRequest, orderState, deliveryCost, usePoint)
+		values (
+		#{orderId},
+		#{receiver},
+		#{memberId},
+		#{memberAddr1},
+		#{memberAddr2},
+		#{memberAddr3},
+		#{shipRequest},
+		#{orderState},
+        #{deliveryCost},
+		#{usePoint}
+		)
+	</insert>
+
+	<select id="readByStringId" parameterType="String"
+		resultType="com.unknown.paldak.admin.domain.OrderVO">
+		select * from tbl_order where orderId = #{orderId}
+	</select>
+
+	<delete id="deleteByStringId" parameterType="String">
+		delete from tbl_order where orderId = #{orderId}
+	</delete>
+
+	<update id="update"
+		parameterType="com.unknown.paldak.admin.domain.OrderVO">
+		update tbl_order
+		set deliveryCost=#{deliveryCost}, receiver=#{receiver}, memberAddr1=#{memberAddr1}, memberAddr2=#{memberAddr2}, memberAddr3=#{memberAddr3}, orderState=#{orderState}, shipRequest=#{shipRequest}	
+		where orderId=#{orderId}
+	</update>
+	
+	<update id="updateOrderState" parameterType="com.unknown.paldak.admin.domain.OrderVO">
+	    update tbl_order
+	    set orderState = #{orderState}
+	    where orderId = #{orderId}
+	</update>
+	
+	 <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.OrderVO">
+       select * from tbl_order where orderId = #{orderId}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_order where orderId = #{orderId}
+    </delete>
+	
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'M'.toString()">
+							LOWER(memberId) like '%'||LOWER(#{keyword})||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							orderId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'R'.toString()">
+							receiver like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+
+	<select id="getListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultType="com.unknown.paldak.admin.domain.OrderVO">
+        <![CDATA[
+            select *
+            from (
+            	select rownum rn, orderId, receiver, memberId, orderState, orderDate
+            from (select * from tbl_order order by orderId asc)
+            where
+        ]]>
+             <include refid="criterial"></include>
+             
+        <![CDATA[ 
+             rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+	</select>
+
+	<select id="getDescListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultType="com.unknown.paldak.admin.domain.OrderVO">
+            <![CDATA[
+            select *
+            from (
+                select rownum rn, orderId, receiver, memberId, orderState, orderDate
+            from (select * from tbl_order order by orderId desc)
+            where
+        ]]>
+                <include refid="criterial"></include>
+                
+        <![CDATA[ 
+                rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_order where
+		<include refid="criterial"></include>
+		 orderId is not null
+</select>
+
+</mapper>

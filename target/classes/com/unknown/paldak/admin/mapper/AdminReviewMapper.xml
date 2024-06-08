@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminReviewMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.ReviewVO">
+        select * from tbl_review where reviewId > 0 order by reviewId desc
+    </select>
+    
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.ReviewVO">
+        <selectKey keyProperty="reviewId" order="BEFORE" resultType="long">
+            select seq_review.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_review (reviewId, itemId, reviewTitle, reviewContent, reviewWriter, reviewImageURL)
+        VALUES (
+        #{reviewId},
+        #{itemId},
+        #{reviewTitle},
+        #{reviewContent},
+        #{reviewWriter},
+        #{reviewImageURL}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.ReviewVO">
+        select * from tbl_review where reviewId = #{reviewId}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_review where reviewId = #{reviewId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.ReviewVO">
+        update tbl_review 
+        set reviewTitle=#{reviewTitle}, reviewContent=#{reviewContent}, reviewWriter=#{reviewWriter}, reviewImageURL=#{reviewImageURL}, reviewUpdateDate=#{reviewUpdateDate}
+        where reviewId=#{reviewId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'W'.toString()">
+							reviewWriter like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'T'.toString()">
+							lower(reviewTitle) like '%'||lower(#{keyword})||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							itemId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ReviewVO">
+        <![CDATA[
+ 			SELECT *
+				FROM (
+				    SELECT
+				        i.*, ROWNUM AS rn
+				    FROM (
+				        SELECT
+				            r.reviewId,
+				            r.itemId,
+				            r.reviewTitle,
+				            r.reviewContent,
+				            r.reviewWriter,
+				            r.reviewImageURL,
+				            r.reviewRegdate,
+				            r.reviewUpdateDate,
+				            rr.answer
+				        FROM
+				            tbl_review r
+				        left JOIN
+				            tbl_review_reply rr
+				        ON
+				            r.reviewId = rr.reviewId
+				        ORDER BY ]]> 
+
+		         <choose>
+			        <when test="sortColumn != null and sortColumn == 'answer'">
+			            <![CDATA[ rr.answer ]]>
+			        </when>
+					<when test="sortColumn != null and sortColumn == 'reviewTitle'">
+			            <![CDATA[ r.reviewTitle ]]>
+			        </when>
+			         <when test="sortColumn != null and sortColumn == 'reviewWriter'">
+			            <![CDATA[ r.reviewWriter ]]>
+			        </when>
+			        <otherwise>
+			        	<![CDATA[ r.reviewId ]]>
+			        </otherwise>
+			     </choose>
+			         
+		        <![CDATA[ asc
+				    ) i
+				    WHERE
+        		]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    
+        
+        
+        
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ReviewVO">
+                <![CDATA[
+ 			SELECT *
+				FROM (
+				    SELECT
+				        i.*, ROWNUM AS rn
+				    FROM (
+				        SELECT
+				            r.reviewId,
+				            r.itemId,
+				            r.reviewTitle,
+				            r.reviewContent,
+				            r.reviewWriter,
+				            r.reviewImageURL,
+				            r.reviewRegdate,
+				            r.reviewUpdateDate,
+				            rr.answer
+				        FROM
+				            tbl_review r
+				        left JOIN
+				            tbl_review_reply rr
+				        ON
+				            r.reviewId = rr.reviewId
+				        ORDER BY ]]> 
+
+		         <choose>
+			        <when test="sortColumn != null and sortColumn == 'answer'">
+			            <![CDATA[ rr.answer ]]>
+			        </when>
+					<when test="sortColumn != null and sortColumn == 'reviewTitle'">
+			            <![CDATA[ r.reviewTitle ]]>
+			        </when>
+			         <when test="sortColumn != null and sortColumn == 'reviewWriter'">
+			            <![CDATA[ r.reviewWriter ]]>
+			        </when>
+			        <otherwise>
+			        	<![CDATA[ r.reviewId ]]>
+			        </otherwise>
+			     </choose>
+			         
+		        <![CDATA[ desc
+				    ) i
+				    WHERE
+        		]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_review where
+		<include refid="criterial"></include>
+		 reviewId > 0
+</select>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.FAQMapper">
+	<select id="getList" resultType="com.unknown.model.FAQVO">
+		select * from tbl_faq where 
+		faqId > 0 order by faqId desc
+	</select>
+	<insert id="insert">
+		insert into tbl_faq (faqId, faqTitle ,faqCategory, faqDescription, faqImageURL)
+		values (seq_faq.nextval, #{faqTitle }, #{faqCategory}, #{faqDescription}, #{faqImageURL})
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="faqId" order="BEFORE"
+			resultType="long">
+			select seq_faq.nextval from dual
+		</selectKey>
+
+		insert into tbl_faq (faqId, faqTitle , faqCategory, faqDescription, faqImageURL)
+		values
+		(#{faqId}, #{faqTitle}, #{faqCategory}, #{faqDescription}, #{faqImageURL} )
+	</insert>
+
+	<select id="read" resultType="com.unknown.model.FAQVO">
+		select * from tbl_faq where
+		faqId = #{faqId}
+	</select>
+
+	<delete id="delete">
+		delete from tbl_faq where faqId = #{faqId}
+	</delete>
+
+	<update id="update">
+		update tbl_faq
+		set faqTitle = #{faqTitle },
+		faqCategory = #{faqCategory},
+		faqDescription=
+		#{faqDescription},
+		faqImageURL=#{faqImageURL},
+		faqUpdateDate = sysdate
+		where faqId = #{faqId}
+	</update>
+	
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							faqTitle like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							faqDescription like '%'||#{keyword}||'%'
+						</when>
+						
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql> 
+	
+	<select id="getListWithPaging"
+		resultType="com.unknown.model.FAQVO">
+	<![CDATA[ 
+		select faqId, faqTitle, faqCategory, faqDescription, faqImageURL,faqRegdate, faqUpdateDate from ( 
+		select /*+INDEX_DESC(tbl_faq pk_faq) */ rownum rn, faqId, faqTitle , faqCategory, faqDescription, faqImageURL,
+		faqRegdate, faqUpdateDate from tbl_faq where ]]>
+		 <include refid="criterial"></include>
+		<![CDATA[
+		rownum <= #{pageNum} * #{amount}
+		) where rn > (#{pageNum} -1) * #{amount}
+	]]>
+	
+		 
+		
+	</select>
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_faq where
+		<include refid="criterial"></include>
+		 faqId > 0
+	</select>
+	
+	<!-- 검색조건1 key, val 찍히는 내용 검색 -->
+	<select id="searchTest" resultType="com.unknown.model.FAQVO">
+	 <![CDATA[
+		select * from tbl_faq
+		where
+	 ]]>
+
+		<trim prefix="(" suffix=") and"> 
+		<foreach item="val" index="key" collection="map" separator="or" >
+			 <if test="key == 'T'.toString()">
+		     	faqTitle  like '%' || #{val} || '%'
+             </if>
+             <if test="key == 'C'.toString()">
+				faqDescription like '%' || #{val} || '%'
+			</if>
+		</foreach>
+		</trim>
+		
+	<![CDATA[
+	 rownum < 10
+	 ]]>
+	</select>
+
+</mapper>

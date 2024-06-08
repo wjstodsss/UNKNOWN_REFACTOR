@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+.left_menu {
+    width: 200px;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+.left_menu h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-top: 1px solid gray; /* Add border to the top of h4 */
+    padding-top: 15px; /* Add padding to push the text down */
+}
+
+.left_menu ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.left_menu ul li {
+    margin-bottom: 5px;
+}
+
+.left_menu ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.left_menu ul li a:hover {
+    text-decoration: underline;
+}

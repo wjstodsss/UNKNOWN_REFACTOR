@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminItemMapper">
+
+	<resultMap id="itemResultMap"
+		type="com.unknown.paldak.admin.domain.ItemVO">
+		<id property="itemId" column="itemId" />
+		<result property="itemName" column="itemName" />
+		<result property="brandId" column="brandId" />
+		<result property="brandName" column="brandName" />
+		<result property="mnfcYear" column="mnfcYear" />
+		<result property="manufacturer" column="manufacturer" />
+		<result property="cateCode" column="cateCode" />
+		<result property="itemPrice" column="itemPrice" />
+		<result property="itemStock" column="itemStock" />
+		<result property="itemDiscount" column="itemDiscount" />
+		<result property="itemIntro" column="itemIntro" />
+		<result property="itemContents" column="itemContents" />
+		<result property="regDate" column="regDate" />
+		<result property="updateDate" column="updateDate" />
+		<!-- 이미지 URL에 대한 매핑 -->
+		<result property="itemImageURL" column="imageURL" />
+	</resultMap>
+	
+	
+	<select id="getList"
+		resultType="com.unknown.paldak.admin.domain.ItemVO">
+		select * from tbl_item where itemId > 0 order by itemId desc
+	</select>
+
+
+	<insert id="insertSelectKey"
+		parameterType="com.unknown.paldak.admin.domain.ItemVO">
+		<selectKey keyProperty="itemId" order="BEFORE"
+			resultType="int">
+			select seq_itemId.nextval from dual
+		</selectKey>
+		INSERT INTO tbl_item (itemId, itemName, brandId, mnfcYear,
+		manufacturer, cateCode, itemPrice, itemStock, itemDiscount, itemIntro,
+		itemContents)
+		VALUES (
+		#{itemId},
+		#{itemName},
+		#{brandId},
+		#{mnfcYear},
+		#{manufacturer},
+		#{cateCode},
+		#{itemPrice},
+		#{itemStock},
+		#{itemDiscount},
+		#{itemIntro},
+		#{itemContents}
+		)
+	</insert>
+
+	<select id="read" parameterType="long" resultMap="itemResultMap">
+		SELECT
+		i.*, ib.brandName, ic.cateName, ii.uploadPath || '/' || ii.uuid || '_' || ii.fileName AS imageURL
+		FROM tbl_item i
+		LEFT JOIN tbl_itemimage ii ON i.itemId = ii.itemId
+		LEFT JOIN tbl_brand ib ON i.brandId = ib.brandId
+		LEFT JOIN tbl_itemCate ic ON i.cateCode = ic.cateCode
+		where i.itemId = #{itemId}
+	</select>
+
+	<delete id="delete" parameterType="long">
+		delete from tbl_item where itemId = #{itemId}
+	</delete>
+
+	<update id="update"
+		parameterType="com.unknown.paldak.admin.domain.ItemVO">
+		update tbl_item
+		set itemName=#{itemName}, brandId=#{brandId},
+		manufacturer=#{manufacturer}, cateCode=#{cateCode},
+		itemPrice=#{itemPrice}, itemStock=#{itemStock},
+		itemDiscount=#{itemDiscount}, itemIntro=#{itemIntro},
+		itemContents=#{itemContents}, updateDate=#{updateDate}
+		where itemId=#{itemId}
+	</update>
+	
+	<update id="updateItemStock"
+		parameterType="com.unknown.paldak.admin.domain.ItemVO">
+		update tbl_item
+		set itemStock=#{itemStock}
+		where itemId=#{itemId}
+	</update>
+
+
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'P'.toString()">
+							itemName like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'B'.toString()">
+							brandId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							cateCode like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							itemId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+
+
+
+
+	<select id="getListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultMap="itemResultMap">
+		   <![CDATA[
+		           SELECT * FROM (
+					    SELECT
+					        i.*, ROWNUM AS rn
+					    FROM (
+					        SELECT i.*, ib.brandName, NVL(ss.itemState, '판매') as itemState, ic.cateName, ii.uploadPath || '/' || ii.uuid || '_' || ii.fileName AS imageURL FROM tbl_item i
+					        LEFT JOIN tbl_itemState ss ON i.itemId = ss.itemId
+					        LEFT JOIN tbl_itemimage ii ON i.itemId = ii.itemId
+					        LEFT JOIN tbl_brand ib ON i.brandId = ib.brandId
+					        LEFT JOIN tbl_itemCate ic ON i.cateCode = ic.cateCode
+					        ORDER BY i.itemId
+				        		 asc) i
+				            where 
+				        ]]>
+						<include refid="criterial"></include>
+					     <![CDATA[ 
+					          rownum <=  #{pageNum} * #{amount}
+					          ) where rn > (#{pageNum}-1) * #{amount}
+					      ]]>
+
+	</select>
+
+	<select id="getDescListWithPaging"
+		parameterType="com.unknown.paldak.admin.common.domain.Criteria"
+		resultMap="itemResultMap">
+		   <![CDATA[
+		           SELECT * FROM (
+					    SELECT
+					        i.*, ROWNUM AS rn
+					    FROM (
+					        SELECT i.*, ib.brandName, NVL(ss.itemState, '판매') as itemState, ic.cateName, ii.uploadPath || '/' || ii.uuid || '_' || ii.fileName AS imageURL FROM tbl_item i
+					        LEFT JOIN tbl_itemState ss ON i.itemId = ss.itemId
+					        LEFT JOIN tbl_itemimage ii ON i.itemId = ii.itemId
+					        LEFT JOIN tbl_brand ib ON i.brandId = ib.brandId
+					        LEFT JOIN tbl_itemCate ic ON i.cateCode = ic.cateCode
+					        ORDER BY i.itemId
+				        		 desc) i
+				            where 
+				        ]]>
+						<include refid="criterial"></include>
+					     <![CDATA[ 
+					          rownum <=  #{pageNum} * #{amount}
+					          ) where rn > (#{pageNum}-1) * #{amount}
+					      ]]>
+
+		</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_item where
+		<include refid="criterial"></include>
+		itemId > 0
+	</select>
+	
+	<insert id="insertItemState" parameterType="com.unknown.paldak.admin.domain.ItemVO">
+	    <selectKey keyProperty="itemStateId" order="BEFORE" resultType="int">
+	        select seq_itemStateId.nextval from dual
+	    </selectKey>
+	    insert into tbl_itemState (itemStateId, itemId, itemState)
+	    values (#{itemStateId}, #{itemId}, '판매')
+	</insert>
+
+	
+	<update id="updateItemState" parameterType="com.unknown.paldak.admin.domain.ItemVO">
+	    update tbl_itemState
+	    set itemState = #{itemState}
+	    where itemId = #{itemId}
+	</update>
+</mapper>

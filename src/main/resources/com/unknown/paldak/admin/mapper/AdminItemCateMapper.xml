@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminItemCateMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.ItemCateVO">
+        select * from tbl_itemCate where tier = 1
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.ItemCateVO">
+        INSERT INTO tbl_itemCate (tier, cateCode, cateName, cateParent)
+        VALUES (
+        #{tier},
+        #{cateCode},
+        #{cateName},
+        #{cateParent}
+        )
+    </insert>
+
+    <select id="readByStringId" parameterType="String" resultType="com.unknown.paldak.admin.domain.ItemCateVO">
+        select * from tbl_itemCate where cateCode = #{cateCode}
+    </select>
+
+    <delete id="deleteByStringId" parameterType="String">
+        delete from tbl_itemCate where cateCode = #{cateCode}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.ItemCateVO">
+        update tbl_itemCate 
+        set tier=#{tier}, cateName=#{cateName}, cateParent=#{cateParent}
+        where cateCode=#{cateCode}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							cateName like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							cateCode like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ItemCateVO">
+        <![CDATA[
+            select * 
+            from (
+            select rownum rn, tier, cateCode, cateName, cateParent
+            from (select * from tbl_itemCate order by
+            ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'cateName'">
+		            <![CDATA[ cateName ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ cateCode ]]>
+		        </otherwise>
+		     </choose>
+			          
+	        <![CDATA[
+	        		 asc)
+	            where 
+	        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ItemCateVO">
+          <![CDATA[
+            select * 
+            from (
+            select rownum rn, tier, cateCode, cateName, cateParent
+            from (select * from tbl_itemCate order by ]]>
+	         <choose>
+		        <when test="sortColumn != null and sortColumn == 'cateName'">
+		            <![CDATA[ cateName ]]>
+		        </when>
+		        <otherwise>
+		        	<![CDATA[ cateCode ]]>
+		        </otherwise>
+		     </choose>
+		     <![CDATA[
+		     desc)
+	            where 
+		      ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_itemCate where
+		<include refid="criterial"></include>
+		cateCode is not null
+	</select>
+	
+    <select id="getTotalByCateParent" resultType="int">
+		select count(*) from tbl_itemCate where tier=2 and cateParent=#{cateCode}	
+	</select>
+	
+	<select id="getListByCateParent" parameterType="map" resultType="com.unknown.paldak.admin.domain.ItemCateVO">
+        <![CDATA[
+            select * 
+            from (
+            select rownum rn, tier, cateCode, cateName, cateParent
+            from (select * from tbl_itemCate where tier=2 and cateParent=#{cateCode} order by cateCode asc)
+	        where 
+            rownum <=  #{cri.pageNum} * #{cri.amount}
+            ) where rn > (#{cri.pageNum}-1) * #{cri.amount}
+        ]]>
+    </select>
+	
+</mapper>

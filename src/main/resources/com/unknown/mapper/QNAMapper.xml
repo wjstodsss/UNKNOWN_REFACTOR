@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.QNAMapper">
+	<select id="getList" resultType="com.unknown.model.QNAVO">
+		select * from tbl_qna where 
+		qnaId > 0 order by qnaId desc
+	</select>
+	<insert id="insert">
+		insert into tbl_qna (qnaId, qnaTitle , qnaCategory, qnaWriter, qnaContent, qnaImageURL)
+		values (seq_qna.nextval, #{qnaTitle }, #{qnaCategory}, #{qnaWriter}, #{qnaContent}, #{qnaImageURL})
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="qnaId" order="BEFORE"
+			resultType="long">
+			select seq_qna.nextval from dual
+		</selectKey>
+
+		insert into tbl_qna (qnaId, qnaTitle , qnaCategory, qnaWriter, qnaContent, qnaImageURL)
+		values
+		(#{qnaId}, #{qnaTitle}, #{qnaCategory},#{qnaWriter}, #{qnaContent}, #{qnaImageURL} )
+	</insert>
+
+	<select id="read" resultType="com.unknown.model.QNAVO">
+		select * from tbl_qna where
+		qnaId = #{qnaId}
+	</select>
+
+	<delete id="delete">
+		delete from tbl_qna where qnaId = #{qnaId}
+	</delete>
+
+	<update id="update">
+		update tbl_qna
+		set qnaTitle = #{qnaTitle },
+		qnaCategory= #{qnaCategory},
+		qnaWriter = #{qnaWriter},
+		qnaContent=
+		#{qnaContent},
+		qnaImageURL=#{qnaImageURL},
+		qnaUpdateDate = sysdate
+		where qnaId = #{qnaId}
+	</update>
+	
+	<sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'Title'.toString()">
+							qnaTitle like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'Content'.toString()">
+							qnaContent like '%'||#{keyword}||'%'
+						</when>
+						
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql> 
+	
+	<select id="getListWithPaging"
+		resultType="com.unknown.model.QNAVO">
+	<![CDATA[ 
+		select qnaId, qnaTitle, qnaCategory, qnaWriter, qnaContent, qnaImageURL,qnaRegdate, qnaUpdateDate from ( 
+		select /*+INDEX_DESC(tbl_qna pk_qna) */ rownum rn, qnaId, qnaCategory, qnaTitle, qnaWriter, qnaContent, qnaImageURL,
+		qnaRegdate, qnaUpdateDate from tbl_qna where ]]>
+		 <include refid="criterial"></include>
+		<![CDATA[
+		rownum <= #{pageNum} * #{amount}
+		) where rn > (#{pageNum} -1) * #{amount}
+	]]>
+	
+		 
+		
+	</select>
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_qna where
+		<include refid="criterial"></include>
+		 qnaId > 0
+	</select>
+	
+	<!-- 검색조건1 key, val 찍히는 내용 검색 -->
+	<select id="searchTest" resultType="com.unknown.model.QNAVO">
+	 <![CDATA[
+		select * from tbl_qna
+		where
+	 ]]>
+
+		<trim prefix="(" suffix=") and"> 
+		<foreach item="val" index="key" collection="map" separator="or" >
+			 <if test="key == 'Title'.toString()">
+		     	qnaTitle  like '%' || #{val} || '%'
+             </if>
+             <if test="key == 'Content'.toString()">
+				qnaContent like '%' || #{val} || '%'
+			</if>
+		</foreach>
+		</trim>
+		
+	<![CDATA[
+	 rownum < 10
+	 ]]>
+	</select>
+
+</mapper>

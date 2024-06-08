@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.unknown.mapper.QNAReplyMapper">
+ <insert id="insert">
+		insert into tbl_qna_reply(replyId, qnaId, reply, replyer) 
+		values (seq_reply.nextval, #{qnaId}, #{reply}, #{replyer})
+	</insert>
+	 <select id="read" resultType="com.unknown.model.QNAReplyVO">
+		select * from tbl_qna_reply where replyId = #{replyId}
+	</select>
+	<delete id="delete">
+		delete from tbl_qna_reply where replyId = #{replyId}
+	</delete>	
+	<!-- <update id="update">
+		update tbl_qna_reply set reply = #{reply}, replyUpdateDate = sysdate
+		where replyId = #{replyId}
+	</update> -->
+ <select id="getListWithPaging" resultType="com.unknown.model.QNAReplyVO">
+ 		select replyId, qnaId, replyer, reply, replyDate
+		from tbl_qna_reply
+		where qnaId = #{qnaId}
+		order by replyId asc
+</select>
+ 
+ </mapper>
