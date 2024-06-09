@@ -19,7 +19,7 @@
 	<insert id="insertSelectKey">
 		<selectKey keyProperty="reviewId" order="BEFORE"
 			resultType="long">
-			select seq_review.nextval from dual
+			select seq_reviewId.nextval from dual
 		</selectKey>
 
 		insert into tbl_review (reviewId, reviewTitle , itemId, reviewWriter,

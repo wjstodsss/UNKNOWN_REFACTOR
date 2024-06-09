@@ -65,6 +65,11 @@
                                         <li><a class="dropdown-item text-light" href="/admin/orderItem/list">주문 상품</a></li>
                                     </ul>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" href="/main" role="button">
+                                        쇼핑몰 가기
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -20,12 +20,10 @@
 		<h1>오늘의 전체 랭킹 순위</h1>
 		<div class="ranking_list">
 			<c:forEach items="${topSellingItems}" var="item" varStatus="status">
-				<div
-					class="ranking_item <c:if test='${item.itemDiscount > 0}'>has-discount</c:if>">
+				<div class="ranking_item <c:if test='${item.itemDiscount > 0}'>has-discount</c:if>">
 					<div class="rank">${status.index + 1}</div>
 					<div class="image">
-						<a
-							href="${pageContext.request.contextPath}/goodsDetail/${item.itemId}">
+						<a href="${pageContext.request.contextPath}/goodsDetail/${item.itemId}">
 							<c:choose>
 								<c:when test="${not empty item.imageList}">
 									<c:forEach var="image" items="${item.imageList}" begin="0"

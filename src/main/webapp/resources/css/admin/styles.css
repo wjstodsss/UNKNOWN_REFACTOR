@@ -1,0 +1,5 @@
+/* src/main/webapp/resources/css/admin/styles.css */
+@charset "UTF-8";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

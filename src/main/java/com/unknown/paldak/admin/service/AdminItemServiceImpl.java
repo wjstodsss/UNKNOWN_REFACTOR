@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.unknown.paldak.admin.common.domain.Criteria;
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.ItemVO;
 import com.unknown.paldak.admin.mapper.AdminItemMapper;
 
@@ -65,6 +66,13 @@ public class AdminItemServiceImpl implements BaseService<ItemVO>{
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
 	}
+	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
 	
 	public boolean registerItemState(ItemVO itemVO) {
 		int result = mapper.insertItemState(itemVO);

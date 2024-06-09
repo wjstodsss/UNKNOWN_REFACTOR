@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unknown.paldak.admin.common.domain.Criteria;
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.MemberVO;
 import com.unknown.paldak.admin.mapper.AdminMemberMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+@Log4j
 @Service
 @AllArgsConstructor
 public class AdminMemberServiceImpl implements BaseService<MemberVO>{
@@ -61,6 +63,13 @@ public class AdminMemberServiceImpl implements BaseService<MemberVO>{
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
 	}
+	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
 	
 	public MemberVO getByStringId(String memberId) {
 		return mapper.readByStringId(memberId);

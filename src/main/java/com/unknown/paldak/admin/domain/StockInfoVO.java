@@ -15,7 +15,7 @@ public class StockInfoVO {
     private String itemName;
     private String manufacturer;
     private Integer itemStock;
-    private long stockOrderId;
+    private Long stockOrderId;
     private Integer stockOrderQty;
     private Integer receivedQty;
     private Date orderDate;

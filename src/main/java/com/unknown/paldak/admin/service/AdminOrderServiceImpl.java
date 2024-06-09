@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unknown.paldak.admin.common.domain.Criteria;
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.OrderVO;
 import com.unknown.paldak.admin.mapper.AdminOrderMapper;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
+@Log4j
 @Service
 @AllArgsConstructor
 public class AdminOrderServiceImpl implements BaseService<OrderVO>{
@@ -22,13 +25,10 @@ public class AdminOrderServiceImpl implements BaseService<OrderVO>{
 
 	@Override
 	public void register(OrderVO orderVO) {
-		/* orderIdë§??¤ê? OrderDTOê°?ì²? orderId?? ???? */
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("_yyyyMMddmm");
 		String orderId = orderVO.getMemberId() + format.format(date);
 		orderVO.setOrderId(orderId);
-
-		System.out.println("ppp");
 		mapper.insert(orderVO);	
 	}
 
@@ -75,6 +75,13 @@ public class AdminOrderServiceImpl implements BaseService<OrderVO>{
 		int result = mapper.updateOrderState(orderVO);
 		return result==1;
 	}
+	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
 
 	
 }

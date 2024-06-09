@@ -1,5 +1,65 @@
 @charset "utf-8";
 
+		/* 작업 모달 헤더 */
+		.custom-modal-header-row {
+		    --bs-gutter-x: 0;
+		}
+		
+		.custom-modal-header-title {
+		    margin-bottom: 0;
+		}
+
+		/* custom-table */
+		.table.custom-table>thead>tr>th {
+		    vertical-align: middle;
+		    text-align: center;
+		    font-size: 12px;
+		}
+		
+		.table.custom-table>tbody>tr>td {
+		    vertical-align: middle;
+		    text-align: center;
+		    padding: 2px;
+		    font-size: 12px;
+		}
+		
+		.button-add {
+		  background-color: #f6f6f6;
+		}
+	
+		/* Hover 효과 변경 */
+		.custom-table tbody tr:hover {
+		    background-color: #f3f3f3; /* Hover 배경색 */
+		}
+	
+		
+		
+		/* 정렬 컴포넌트 th */
+		.custom-sort-component {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		}
+		
+		.custom-sort-component .label {
+		    font-size: 10px;
+		    color: black;
+		   	text-align: center;
+ 			vertical-align: middle;
+ 			font-size: 12px;
+		}
+		
+		.custom-sort-component .sort-icons {
+		    display: flex;
+		    flex-direction: column;
+		    font-size: 10px;
+		}
+		
+		.no-anchor-text-decoration {
+		    text-decoration: none;
+		    color: black;
+		}
+		
         /* 좌측 네비게이션 스타일 */
         .navbar-nav .nav-link {
             color: #333; /* 텍스트 색상 */
@@ -13,7 +73,8 @@
             background-color: #e9ecef; /* 드롭다운 호버 배경색 */
             color: #333 !important; /* 텍스트 색상 */
         }
-            	.searchForm {
+        
+        .searchForm {
     		display: flex;
     		margin-bottom: 10px;
     	}
@@ -25,8 +86,8 @@
 		  background-color: #f8f9fa; /* 배경색 설정 */
 		  border: 1px solid #ced4da; /* 테두리 스타일 설정 */
 		  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
-		  padding: 8px 12px; /* 내부 여백 설정 */
-		  font-size: 14px; /* 폰트 크기 설정 */
+		  padding: 8px; /* 내부 여백 설정 */
+		  font-size: 10px; /* 폰트 크기 설정 */
 		}
 		
 		/* 선택 상자 호버 효과 */
@@ -37,10 +98,10 @@
 		/* 입력 필드 스타일링 */
 		.custom-keyword {
 		  margin-right: 5px;
-		  padding: 8px 12px; /* 내부 여백 설정 */
+		  padding: 8px; /* 내부 여백 설정 */
 		  border: 1px solid #ced4da; /* 테두리 스타일 설정 */
 		  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
-		  font-size: 14px; /* 폰트 크기 설정 */
+		  font-size: 10px; /* 폰트 크기 설정 */
 		}
 		
 		/* 입력 필드 호버 효과 */
@@ -54,29 +115,15 @@
 		  box-shadow: 0 0 5px #4d94ff; /* 포커스 시 그림자 효과 추가 */
 		}
 		
-		/* 기본 버튼 스타일링 */
-		.custom-btn {
-		  margin-right: 5px;
-		  display: inline-block; /* 인라인 요소로 표시되도록 설정 */
-		  padding: 8px 12px; /* 내부 여백 설정 */
-		  font-size: 14px; /* 폰트 크기 설정 */
-		  border: 1px solid #ced4da; /* 테두리 스타일 설정 */
-		  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
-		  background-color: #f8f9fa; /* 배경색 설정 */
-		  color: #212529; /* 텍스트 색상 설정 */
+		.custom-keyword-btn {
+			align-content: center;
+			border: 1px solid #ced4da; /* 테두리 스타일 설정 */
+		 	border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
 		}
 		
-		/* 버튼 호버 효과 */
-		.custom-btn:hover {
-		  background-color: #e9ecef; /* 호버 시 배경색 변경 */
+		.custom-keyword-btn:hover {
+			border-color: #6c757d; /* 호버 시 테두리 색상 변경 */
 		}
-		
-		/* 버튼 클릭 효과 */
-		.custom-btn:active {
-		  background-color: #dee2e6; /* 클릭 시 배경색 변경 */
-		  border-color: #adb5bd; /* 클릭 시 테두리 색상 변경 */
-		}
-
 
 		/* 기본 버튼 스타일 */
 		.btn-board {
@@ -155,3 +202,30 @@
 		    padding: 5px; /* 패딩 추가 (선택 사항) */
 		}
         
+        /* 기본 paginate_button 스타일 변경 */
+		.paginate_button {
+		    background-color: #f0f0f0; /* 기본 배경색 */
+		    color: #333; /* 기본 텍스트 색상 */
+		    border-radius: 4px; /* 모서리 둥글게 */
+		}
+		
+		/* hover 시 스타일 변경 */
+		.paginate_button:hover {
+		    background-color: #eee; /* hover 시 배경색 */
+		    color: #000; /* hover 시 텍스트 색상 */
+		}
+		
+		/* active 상태일 때 스타일 변경 */
+		.pagination>.active>a {
+		    background-color: #fff; /* 활성 상태 배경색 */
+		    color: #333; /* 활성 상태 텍스트 색상 */
+		    border-color: red;
+		}
+		
+		/* active 상태에서 hover 시 스타일 변경 */
+		.pagination>.active>a:hover {
+		    background-color: #eee; /* 활성 상태 hover 시 배경색 */
+		    color: #333; /* 활성 상태 hover 시 텍스트 색상 */
+		    border-color: red;
+		}
+		        

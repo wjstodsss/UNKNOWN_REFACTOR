@@ -29,7 +29,7 @@
 	<%@ include file="/WEB-INF/views/includes/header.jsp"%>
 	<div class="wrapper">
 		<div class="wrap">
-			<form id="login_form" method="post">
+			<form id="login_form" action="login.do" method="post">
 				<div class="logo_wrap">
 					<span>Unknown</span>
 				</div>

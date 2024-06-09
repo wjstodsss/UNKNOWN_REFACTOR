@@ -27,7 +27,7 @@
                         <!-- 로그인 했을 때 -->
                         <c:if test="${member.adminCk == 1 }">
                             <!-- 관리자 계정일 때 -->
-                            <li><a href="/admin/main">관리자 페이지</a></li>
+                            <li><a href="/admin/dashboard/main">관리자 페이지</a></li>
                         </c:if>
                         <li><a href="/mypage/orderList">주문조회</a></li>
                         <li><a id="gnb_logout_button">로그아웃</a></li>

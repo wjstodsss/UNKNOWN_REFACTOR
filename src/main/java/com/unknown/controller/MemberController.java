@@ -46,19 +46,19 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder pwEncoder;
 
-	// ÀÏ¹Ý È¸¿ø ÀÎÁõ ÆäÀÌÁö ÀÌµ¿
+	// ï¿½Ï¹ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/normalAuth", method = RequestMethod.GET)
 	public void normalAuthGET() {
-		logger.info("ÀÏ¹Ý È¸¿ø°¡ÀÔ ÀÎÁõ ÆäÀÌÁö ÁøÀÔ");
+		logger.info("ï¿½Ï¹ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
-	// ÀÌ¸ÞÀÏ ÀÎÁõ ÆäÀÌÁö ÀÌµ¿
+	// ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/mail", method = RequestMethod.GET)
 	public void mailGET() {
-		logger.info("ÀÌ¸ÞÀÏ ÀÎÁõ ÆäÀÌÁö ÁøÀÔ");
+		logger.info("ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
-	// ÀÌ¸ÞÀÏ ÀÎÁõ Ã³¸®
+	// ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 	public void verifyEmail(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
@@ -72,22 +72,22 @@ public class MemberController {
 	            String access_Token = memberservice.getAccessToken(code);
 	            HashMap<String, Object> userInfo = memberservice.getUserInfo(access_Token);
 
-	            // Ä«Ä«¿À »ç¿ëÀÚ Á¤º¸¸¦ ÀúÀå
+	            // Ä«Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	            memberservice.saveKakaoUserInfo(access_Token);
 
 	            String email = (String) userInfo.get("email");
 	            MemberVO existingMember = memberservice.getMemberByEmail(email);
 
 	            if (existingMember != null) {
-	                // Å»Åð ¿©ºÎ Ã¼Å©
+	                // Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
 	                if ("Y".equals(existingMember.getWithdrawal())) {
 	                    session.invalidate();
-	                    rttr.addFlashAttribute("withdrawalMessage", "Å»ÅðÇÑ È¸¿øÀÔ´Ï´Ù.");
+	                    rttr.addFlashAttribute("withdrawalMessage", "Å»ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
 	                    return "redirect:/member/login";
 	                }
 
 	                session.setAttribute("member", existingMember);
-	                return "redirect:/main";  // ¸ÞÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	                return "redirect:/main";  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	            }
 
 	            model.addAttribute("userInfo", userInfo);
@@ -99,19 +99,19 @@ public class MemberController {
 
 	            return "member/easyGeneral";
 	        } else {
-	            logger.info("ÀÌ¿ë¾à°üµ¿ÀÇ ÆäÀÌÁö ÁøÀÔ");
+	            logger.info("ï¿½Ì¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	            return "member/easyGeneral";
 	        }
 	    }
 
 
-	// È¸¿ø°¡ÀÔ ÆäÀÌÁö ÀÌµ¿
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public void joinGET() {
-		logger.info("È¸¿ø°¡ÀÔ Á¤º¸ ÀÔ·Â ÆäÀÌÁö ÁøÀÔ");
+		logger.info("È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
-	// È¸¿ø°¡ÀÔ
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String joinPOST(MemberVO member, Model model) throws Exception {
 		String rawPw = member.getMemberPw();
@@ -121,28 +121,28 @@ public class MemberController {
 		return "redirect:/main";
 	}
 
-	// ·Î±×ÀÎ ÆäÀÌÁö ÀÌµ¿
+	// ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginGET() {
-	    logger.info("·Î±×ÀÎ ÆäÀÌÁö ÁøÀÔ");
-	    return "member/login"; // ¿©±â¿¡ JSP ÆÄÀÏÀÇ °æ·Î¸¦ ¸ÂÃß¾î ÁÖ¼¼¿ä.
+	    logger.info("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+	    return "member/login"; // ï¿½ï¿½ï¿½â¿¡ JSP ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ß¾ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½.
 	}
 
-	// ¾ÆÀÌµð Áßº¹ °Ë»ç
+	// ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½ ï¿½Ë»ï¿½
 	@RequestMapping(value = "/memberIdChk", method = RequestMethod.POST)
 	@ResponseBody
 	public String memberIdChkPOST(String memberId) throws Exception {
-		logger.info("memberIdChk() ÁøÀÔ");
+		logger.info("memberIdChk() ï¿½ï¿½ï¿½ï¿½");
 		int result = memberservice.idCheck(memberId);
-		logger.info("°á°ú°ª = " + result);
+		logger.info("ï¿½ï¿½ï¿½ï¿½ï¿½ = " + result);
 		return result != 0 ? "fail" : "success";
 	}
 
-	/* ¸ÞÀÏ ¹ß¼Û */
+	/* ï¿½ï¿½ï¿½ï¿½ ï¿½ß¼ï¿½ */
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public void sendMailTest() throws Exception {
-		String subject = "test ¸ÞÀÏ";
-		String content = "¸ÞÀÏ Å×½ºÆ® ³»¿ë";
+		String subject = "test ï¿½ï¿½ï¿½ï¿½";
+		String content = "ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½";
 		String from = "dhkim0147@naver.com";
 		String to = "dhkim9298@naver.com";
 
@@ -159,21 +159,21 @@ public class MemberController {
 		}
 	}
 
-	/* ÀÌ¸ÞÀÏ ÀÎÁõ */
+	/* ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 	@RequestMapping(value = "/mailCheck", method = RequestMethod.GET)
 	@ResponseBody
 	public String mailCheckGET(String email) throws Exception {
-		logger.info("ÀÌ¸ÞÀÏ µ¥ÀÌÅÍ Àü¼Û È®ÀÎ: {}", email);
+		logger.info("ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½: {}", email);
 
 		Random random = new Random();
 		int checkNum = random.nextInt(888888) + 111111;
-		logger.info("ÀÎÁõ¹øÈ£ " + checkNum);
+		logger.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ " + checkNum);
 
 		String setFrom = "dhkim0147@naver.com";
 		String toMail = email;
-		String title = "È¸¿ø°¡ÀÔ ÀÎÁõ ÀÌ¸ÞÀÏ ÀÔ´Ï´Ù.";
-		String content = "È¨ÆäÀÌÁö¸¦ ¹æ¹®ÇØÁÖ¼Å¼­ °¨»çÇÕ´Ï´Ù." + "<br><br>" + "ÀÎÁõ ¹øÈ£´Â " + checkNum + "ÀÔ´Ï´Ù." + "<br>"
-				+ "ÇØ´ç ÀÎÁõ¹øÈ£¸¦ ÀÎÁõ¹øÈ£ È®ÀÎ¶õ¿¡ ±âÀÔÇÏ¿© ÁÖ¼¼¿ä.";
+		String title = "È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ô´Ï´ï¿½.";
+		String content = "È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æ¹®ï¿½ï¿½ï¿½Ö¼Å¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½." + "<br><br>" + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ " + checkNum + "ï¿½Ô´Ï´ï¿½." + "<br>"
+				+ "ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ È®ï¿½Î¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ö¼ï¿½ï¿½ï¿½.";
 
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
@@ -190,11 +190,11 @@ public class MemberController {
 		return Integer.toString(checkNum);
 	}
 
-	// ÀÌ¸ÞÀÏ Áßº¹ È®ÀÎ
+	// ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ßºï¿½ È®ï¿½ï¿½
 	@RequestMapping(value = "/checkEmailDuplicate", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> checkEmailDuplicate(@RequestParam("memberMail") String memberMail) {
-		logger.info("checkEmailDuplicate() ÁøÀÔ");
+		logger.info("checkEmailDuplicate() ï¿½ï¿½ï¿½ï¿½");
 		int count = memberservice.checkEmailDuplicate(memberMail);
 		logger.info("Received email address: {}", memberMail);
 		logger.info("Count: {}", count);
@@ -205,24 +205,24 @@ public class MemberController {
 		return response;
 	}
 	
-	// ·Î±×ÀÎ POST
+	// ï¿½Î±ï¿½ï¿½ï¿½ POST
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
     public String loginPOST(HttpServletRequest request, MemberVO member, RedirectAttributes rttr) throws Exception {
         HttpSession session = request.getSession();
-        String rawPw = member.getMemberPw(); // »ç¿ëÀÚ°¡ ÀÔ·ÂÇÑ ºñ¹Ð¹øÈ£
-        String memberId = member.getMemberId(); // »ç¿ëÀÚ°¡ ÀÔ·ÂÇÑ ¾ÆÀÌµð
+        String rawPw = member.getMemberPw(); // ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£
+        String memberId = member.getMemberId(); // ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½
         
-        // È¸¿ø Å»Åð ¿©ºÎ È®ÀÎ
+        // È¸ï¿½ï¿½ Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         boolean isWithdrawn = memberservice.isMemberWithdrawn(memberId);
         if (isWithdrawn) {
-            rttr.addFlashAttribute("withdrawalMessage", "Å»ÅðÇÑ È¸¿øÀÔ´Ï´Ù.");
+            rttr.addFlashAttribute("withdrawalMessage", "Å»ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
             return "redirect:/member/login";
         }
 
-        MemberVO lvo = memberservice.memberLogin(memberId, rawPw); // ºñ¹Ð¹øÈ£ ºñ±³ Æ÷ÇÔ
+        MemberVO lvo = memberservice.memberLogin(memberId, rawPw); // ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         if (true) {
-            lvo.setMemberPw(""); // ºñ¹Ð¹øÈ£ »èÁ¦
+            lvo.setMemberPw(""); // ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
             session.setAttribute("member", lvo);
             session.setAttribute("memberId", lvo.getMemberId());
             session.setAttribute("point", lvo.getPoint());
@@ -230,9 +230,9 @@ public class MemberController {
 
             if (true) {
                 session.setAttribute("isAdmin", true);
-                System.out.println("°ü¸®ÀÚ·Î ·Î±×ÀÎµÇ¾ú½À´Ï´Ù. adminCk: " + lvo.getAdminCk());
+                System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Î±ï¿½ï¿½ÎµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. adminCk: " + lvo.getAdminCk());
             } else {
-                System.out.println("»ç¿ëÀÚ·Î ·Î±×ÀÎµÇ¾ú½À´Ï´Ù. adminCk: " + lvo.getAdminCk());
+                System.out.println("ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Î±ï¿½ï¿½ÎµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. adminCk: " + lvo.getAdminCk());
             }
 
             return "redirect:/main";
@@ -244,16 +244,16 @@ public class MemberController {
 
 
 
-	/* ºñµ¿±â¹æ½Ä ·Î±×¾Æ¿ô ¸Þ¼­µå */
+	/* ï¿½ñµ¿±ï¿½ï¿½ï¿½ ï¿½Î±×¾Æ¿ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ */
 	@RequestMapping(value = "logout.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void logoutPOST(HttpServletRequest request) throws Exception {
-		logger.info("ºñµ¿±â ·Î±×¾Æ¿ô ¸Þ¼­µå ÁøÀÔ");
+		logger.info("ï¿½ñµ¿±ï¿½ ï¿½Î±×¾Æ¿ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		HttpSession session = request.getSession();
 		session.invalidate();
 	}
 
-	// ºñ¹Ð¹øÈ£ È®ÀÎ Ã³¸®
+	// ï¿½ï¿½Ð¹ï¿½È£ È®ï¿½ï¿½ Ã³ï¿½ï¿½
 	@RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkPassword(HttpServletRequest request, @RequestParam("password") String password) {
@@ -266,13 +266,13 @@ public class MemberController {
 
 			if (pwEncoder.matches(password, encodedPassword)) {
 				session.setAttribute("passwordConfirmed", true);
-				return "success";
+				return "redirect:/member/login";
 			}
 		}
 		return "fail";
 	}
 
-	// È¸¿ø Á¤º¸ ¼öÁ¤ ÆäÀÌÁö ÀÌµ¿
+	// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String memberUpdate(HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
@@ -301,19 +301,19 @@ public class MemberController {
 		if (sessionMember != null) {
 			member.setMemberId(sessionMember.getMemberId());
 
-			// ÇöÀç ºñ¹Ð¹øÈ£°¡ º¯°æµÇÁö ¾ÊÀº °æ¿ì¿¡´Â ±âÁ¸ ºñ¹Ð¹øÈ£¸¦ À¯Áö
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (member.getMemberPw() == null || member.getMemberPw().isEmpty()) {
 				member.setMemberPw(sessionMember.getMemberPw());
 			} else {
-				String rawPw = member.getMemberPw(); // ÀÎÄÚµù Àü ºñ¹Ð¹øÈ£
-				String encodePw = pwEncoder.encode(rawPw); // ºñ¹Ð¹øÈ£ ÀÎÄÚµù
-				member.setMemberPw(encodePw); // ÀÎÄÚµùµÈ ºñ¹Ð¹øÈ£·Î ¼³Á¤
+				String rawPw = member.getMemberPw(); // ï¿½ï¿½ï¿½Úµï¿½ ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£
+				String encodePw = pwEncoder.encode(rawPw); // ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½Úµï¿½
+				member.setMemberPw(encodePw); // ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			}
 
-			// È¸¿ø Á¤º¸ ¼öÁ¤ ·ÎÁ÷
+			// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			memberservice.memberUpdate(member);
 
-			// ¸ðµç ÇÊµå°ªÀÌ ´ã±ä MemberVO °´Ã¼¸¦ ºä·Î Àü´Þ
+			// ï¿½ï¿½ï¿½ ï¿½Êµå°ªï¿½ï¿½ ï¿½ï¿½ï¿½ MemberVO ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			model.addAttribute("member", member);
 
 			return "redirect:/main";
@@ -323,7 +323,7 @@ public class MemberController {
 	}
 
 
-	// È¸¿ø Å»Åð
+	// È¸ï¿½ï¿½ Å»ï¿½ï¿½
 	@RequestMapping(value = "/withdraw", method = RequestMethod.POST)
 	public String withdraw(HttpServletRequest request, RedirectAttributes rttr) {
 		HttpSession session = request.getSession();
@@ -334,7 +334,7 @@ public class MemberController {
 				boolean isWithdrawn = memberservice.isMemberWithdrawn(memberId);
 				if (isWithdrawn) {
 					session.invalidate();
-					rttr.addFlashAttribute("withdrawalMessage", "Å»ÅðÇÑ È¸¿øÀÔ´Ï´Ù.");
+					rttr.addFlashAttribute("withdrawalMessage", "Å»ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
 					return "redirect:/member/login";
 				} else {
 					boolean result = memberservice.memberWithdraw(memberId);
@@ -357,7 +357,7 @@ public class MemberController {
 		}
 	}
 
-	// ¾ÆÀÌµð Ã£±â
+	// ï¿½ï¿½ï¿½Ìµï¿½ Ã£ï¿½ï¿½
 	@RequestMapping(value = "/findIdView", method = RequestMethod.GET)
 	public String findIdView() throws Exception {
 		return "/member/findIdView";
@@ -368,7 +368,7 @@ public class MemberController {
 		logger.info("memberMail: " + memberMail);
 
 		if (memberservice.findIdCheck(memberMail) == 0) {
-			model.addAttribute("msg", "ÀÌ¸ÞÀÏÀ» È®ÀÎÇØÁÖ¼¼¿ä");
+			model.addAttribute("msg", "ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½");
 			return "/member/findIdView";
 		} else {
 			List<MemberVO> members = memberservice.findId(memberMail);
@@ -377,19 +377,19 @@ public class MemberController {
 		}
 	}
 
-	// ºñ¹Ð¹øÈ£ Ã£±â ÆäÀÌÁö ÀÌµ¿
+	// ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/findPassword", method = RequestMethod.GET)
 	public String findPassword() throws Exception {
 		return "/member/findPassword";
 	}
 
-	// ºñ¹Ð¹øÈ£ Ã£±â ÀÎÁõ ÆäÀÌÁö ÀÌµ¿
+	// ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/findPasswordComplete", method = RequestMethod.GET)
 	public String findPasswordComplete() {
 		return "member/findPasswordComplete";
 	}
 	
-	// ºñ¹Ð¹øÈ£ Ã£±â ¿äÃ» Ã³¸®
+	// ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½Ã» Ã³ï¿½ï¿½
 	@RequestMapping(value = "/findPassword", method = RequestMethod.POST)
 	public String findPassword(@RequestParam("memberMail") String memberMail, RedirectAttributes rttr,
 	        HttpServletRequest request) {
@@ -400,15 +400,15 @@ public class MemberController {
 	            session.setAttribute("verificationCode", verificationCode);
 	            session.setAttribute("memberMail", memberMail);
 	            sendVerificationEmail(memberMail, verificationCode);
-	            rttr.addFlashAttribute("message", "ÀÎÁõ ÀÌ¸ÞÀÏÀÌ Àü¼ÛµÇ¾ú½À´Ï´Ù. ÀÌ¸ÞÀÏÀ» È®ÀÎÇÏ¿© ÀÎÁõÇØÁÖ¼¼¿ä.");
-	            return "redirect:/member/findPasswordComplete"; // ºñ¹Ð¹øÈ£ Ã£±â ¿Ï·á ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	            rttr.addFlashAttribute("message", "ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	            return "redirect:/member/findPasswordComplete"; // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	        } catch (Exception e) {
-	            rttr.addFlashAttribute("message", "ÀÎÁõ ÀÌ¸ÞÀÏ ¹ß¼Û¿¡ ½ÇÆÐÇß½À´Ï´Ù. Àá½Ã ÈÄ ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
-	            return "redirect:/member/findPassword"; // ºñ¹Ð¹øÈ£ Ã£±â ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	            rttr.addFlashAttribute("message", "ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	            return "redirect:/member/findPassword"; // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	        }
 	    } else {
-	        rttr.addFlashAttribute("message", "µî·ÏµÇÁö ¾ÊÀº ÀÌ¸ÞÀÏ ÁÖ¼ÒÀÔ´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä.");
-	        return "redirect:/member/findPassword"; // ºñ¹Ð¹øÈ£ Ã£±â ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	        rttr.addFlashAttribute("message", "ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ï¿½Ô´Ï´ï¿½. ï¿½Ù½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	        return "redirect:/member/findPassword"; // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	    }
 	}
 
@@ -423,8 +423,8 @@ public class MemberController {
 	}
 
 	private void sendVerificationEmail(String memberMail, String verificationCode) throws Exception {
-		String subject = "ºñ¹Ð¹øÈ£ Ã£±â ÀÎÁõ ÀÌ¸ÞÀÏ";
-		String content = "¾È³çÇÏ¼¼¿ä,\n\nºñ¹Ð¹øÈ£ Ã£±â ÀÎÁõÀ» À§ÇÑ ÀÎÁõ ÄÚµå´Â " + verificationCode + "ÀÔ´Ï´Ù.\n\n°¨»çÇÕ´Ï´Ù.";
+		String subject = "ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½";
+		String content = "ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½,\n\nï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½ " + verificationCode + "ï¿½Ô´Ï´ï¿½.\n\nï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.";
 		String from = "dhkim0147@naver.com";
 
 		try {
@@ -436,17 +436,17 @@ public class MemberController {
 			helper.setText(content);
 			mailSender.send(message);
 		} catch (Exception e) {
-			throw new Exception("ÀÎÁõ ÀÌ¸ÞÀÏ ¹ß¼Û¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+			throw new Exception("ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
 		}
 	}
 
-	// ÀÌ¸ÞÀÏ ÀÎÁõ ÆäÀÌÁö ÀÌµ¿
+	// ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 	@RequestMapping(value = "/verifyPassword", method = RequestMethod.GET)
 	public String verifyPasswordGET() {
 		return "member/verifyPassword";
 	}
 
-	// ÀÌ¸ÞÀÏ ÀÎÁõ Ã³¸®
+	// ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 	@RequestMapping(value = "/findPasswordComplete", method = RequestMethod.POST)
 	public String verifyPasswordPOST(@RequestParam("verificationCode") String verificationCode,
 	        HttpServletRequest request, RedirectAttributes rttr) {
@@ -460,15 +460,15 @@ public class MemberController {
 	            memberservice.saveTemporaryPassword(memberMail, temporaryPassword);
 	            sendTemporaryPasswordByEmail(memberMail, temporaryPassword);
 	            rttr.addFlashAttribute("message",
-	                    "ÀÎÁõÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù. ÀÓ½Ã ºñ¹Ð¹øÈ£°¡ ÀÌ¸ÞÀÏ·Î ¹ß¼ÛµÇ¾ú½À´Ï´Ù. ·Î±×ÀÎ ÈÄ ºñ¹Ð¹øÈ£¸¦ º¯°æÇØÁÖ¼¼¿ä.");
-	            return "redirect:/member/login"; //·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ® 
+	                    "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½Ï·ï¿½ ï¿½ß¼ÛµÇ¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	            return "redirect:/member/login"; //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ® 
 	        } catch (Exception e) {
-	            rttr.addFlashAttribute("message", "ÀÓ½Ã ºñ¹Ð¹øÈ£ ¹ß±Þ ¹× Àü¼Û¿¡ ½ÇÆÐÇß½À´Ï´Ù. Àá½Ã ÈÄ ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
-	            return "redirect:/member/findPasswordComplete"; // ºñ¹Ð¹øÈ£ Ã£±â ¿Ï·á ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	            rttr.addFlashAttribute("message", "ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ß±ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	            return "redirect:/member/findPasswordComplete"; // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	        }
 	    } else {
-	        rttr.addFlashAttribute("message", "ÀÎÁõ ÄÚµå°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä.");
-	        return "redirect:/member/findPasswordComplete"; // ºñ¹Ð¹øÈ£ Ã£±â ¿Ï·á ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+	        rttr.addFlashAttribute("message", "ï¿½ï¿½ï¿½ï¿½ ï¿½Úµå°¡ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½. ï¿½Ù½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
+	        return "redirect:/member/findPasswordComplete"; // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
 	    }
 	}
 
@@ -486,9 +486,9 @@ public class MemberController {
 	}
 
 	private void sendTemporaryPasswordByEmail(String memberMail, String temporaryPassword) throws Exception {
-		String subject = "ÀÓ½Ã ºñ¹Ð¹øÈ£ ¹ß±Þ ¾È³»";
-		String content = "¾È³çÇÏ¼¼¿ä,\n\nÈ¸¿ø´ÔÀÇ ÀÓ½Ã ºñ¹Ð¹øÈ£´Â " + temporaryPassword
-				+ "ÀÔ´Ï´Ù.\n\n·Î±×ÀÎ ÈÄ ¹Ýµå½Ã ºñ¹Ð¹øÈ£¸¦ º¯°æÇØÁÖ¼¼¿ä.\n\n°¨»çÇÕ´Ï´Ù.";
+		String subject = "ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ß±ï¿½ ï¿½È³ï¿½";
+		String content = "ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½,\n\nÈ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ " + temporaryPassword
+				+ "ï¿½Ô´Ï´ï¿½.\n\nï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ýµï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.\n\nï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.";
 		String from = "dhkim0147@naver.com";
 
 		try {
@@ -500,7 +500,7 @@ public class MemberController {
 			helper.setText(content);
 			mailSender.send(message);
 		} catch (Exception e) {
-			throw new Exception("ÀÓ½Ã ºñ¹Ð¹øÈ£ ÀÌ¸ÞÀÏ ¹ß¼Û¿¡ ½ÇÆÐÇß½À´Ï´Ù.");
+			throw new Exception("ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
 		}
 	}
 }

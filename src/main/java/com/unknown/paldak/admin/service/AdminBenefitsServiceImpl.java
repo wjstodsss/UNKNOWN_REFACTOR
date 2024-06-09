@@ -1,15 +1,13 @@
 package com.unknown.paldak.admin.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unknown.paldak.admin.common.domain.Criteria;
-
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.BenefitsVO;
 import com.unknown.paldak.admin.mapper.AdminBenefitsMapper;
 
@@ -38,7 +36,6 @@ public class AdminBenefitsServiceImpl implements BaseService<BenefitsVO>{
 
 	@Override
 	public boolean modify(BenefitsVO benefitsVO) {
-		System.out.println("kkkkkkkkkkddddddddddddkkkkkkkkkkkkkkk" + benefitsVO);
 		int result = mapper.update(benefitsVO);
 		return result==1;
 	}
@@ -55,14 +52,22 @@ public class AdminBenefitsServiceImpl implements BaseService<BenefitsVO>{
 	}
 	
 	@Override
-	public List<BenefitsVO> getDescList(Criteria cri) {
-		return mapper.getDescListWithPaging(cri);
-	}
-	
-	@Override
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
 	}
 	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
+	
+	public List<BenefitsVO> getBenefitsList(Criteria cri) {
+        List<BenefitsVO> list = getList(cri);
+        log.info("Stock list retrieved: " + list.size() + " items");
+        return list;
+        
+    }
 	
 }

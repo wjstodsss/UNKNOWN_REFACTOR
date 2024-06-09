@@ -72,52 +72,52 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void order(OrderDTO ord) {
         
-        // receiver °ª ¼³Á¤
+        // receiver ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(ord.getReceiver() == null || ord.getReceiver().isEmpty()) {
-            ord.setReceiver(ord.getMemberId()); // memberId·Î ¼³Á¤
+            ord.setReceiver(ord.getMemberId()); // memberIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
-        /* »ç¿ëÇÒ µ¥ÀÌÅÍ°¡Á®¿À±â */
-        /* ÁÖ¹® Á¤º¸ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        /* ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½ */
         List<OrderItemDTO> ords = new ArrayList<>();
         for (OrderItemDTO oit : ord.getOrders()) {
             OrderItemDTO orderItem = orderMapper.getOrderInfo(oit.getItemId());
-            // ¼ö·® ¼ÂÆÃ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             orderItem.setItemCount(oit.getItemCount());
-            // ±âº»Á¤º¸ ¼ÂÆÃ
+            // ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             orderItem.initSaleTotal();
-            // List°´Ã¼ Ãß°¡
+            // Listï¿½ï¿½Ã¼ ï¿½ß°ï¿½
             ords.add(orderItem);
         }
-        /* OrderDTO ¼ÂÆÃ */
+        /* OrderDTO ï¿½ï¿½ï¿½ï¿½ */
         ord.setOrders(ords);
         ord.getOrderPriceInfo();
 
-        /* DB ÁÖ¹®,ÁÖ¹®»óÇ°(,¹è¼ÛÁ¤º¸) ³Ö±â */
+        /* DB ï¿½Ö¹ï¿½,ï¿½Ö¹ï¿½ï¿½ï¿½Ç°(,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½Ö±ï¿½ */
 
-        /* orderId¸¸µé±â ¹× OrderDTO°´Ã¼ orderId¿¡ ÀúÀå */
+        /* orderIdï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ OrderDTOï¿½ï¿½Ã¼ orderIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("_yyyyMMddmm");
         String orderId = ord.getMemberId() + format.format(date);
         ord.setOrderId(orderId);
 
-        /* db³Ö±â */
-        orderMapper.enrollOrder(ord); // tbl_order µî·Ï
-        for (OrderItemDTO oit : ord.getOrders()) { // tbl_orderItem µî·Ï
+        /* dbï¿½Ö±ï¿½ */
+        orderMapper.enrollOrder(ord); // tbl_order ï¿½ï¿½ï¿½
+        for (OrderItemDTO oit : ord.getOrders()) { // tbl_orderItem ï¿½ï¿½ï¿½
             oit.setOrderId(orderId);
             orderMapper.enrollOrderItem(oit);
         }
 
-        /* Àç°í º¯µ¿ Àû¿ë */
+        /* ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
         for (OrderItemDTO oit : ord.getOrders()) {
-            /* º¯µ¿ Àç°í °ª ±¸ÇÏ±â */
+            /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ */
             ItemVO item = itemMapper.getGoodsInfo(oit.getItemId());
             item.setItemStock(item.getItemStock() - oit.getItemCount());
-            /* º¯µ¿ °ª DB Àû¿ë */
+            /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ DB ï¿½ï¿½ï¿½ï¿½ */
             orderMapper.deductStock(item);
         }
 
-        /* Àå¹Ù±¸´Ï Á¦°Å */
+        /* ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
         for (OrderItemDTO oit : ord.getOrders()) {
             CartDTO dto = new CartDTO();
             dto.setMemberId(ord.getMemberId());
@@ -128,36 +128,36 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-    /* ÁÖ¹®Ãë¼Ò */
+    /* ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ */
     @Override
     @Transactional
     public void orderCancle(OrderCancelDTO dto) {
         
-        /* ÁÖ¹®, ÁÖ¹®»óÇ° °´Ã¼ */
-        /*È¸¿ø*/
+        /* ï¿½Ö¹ï¿½, ï¿½Ö¹ï¿½ï¿½ï¿½Ç° ï¿½ï¿½Ã¼ */
+        /*È¸ï¿½ï¿½*/
             MemberVO member = memberMapper.getMemberInfo(dto.getMemberId());
-        /*ÁÖ¹®»óÇ°*/
+        /*ï¿½Ö¹ï¿½ï¿½ï¿½Ç°*/
             List<OrderItemDTO> ords = orderMapper.getOrderItemInfo(dto.getOrderId());
             for(OrderItemDTO ord : ords) {
                 ord.initSaleTotal();
             }
-        /* ÁÖ¹® */
+        /* ï¿½Ö¹ï¿½ */
             OrderDTO orw = orderMapper.getOrder(dto.getOrderId());
             orw.setOrders(ords);
             
             orw.getOrderPriceInfo();
             
-    /* ÁÖ¹®»óÇ° Ãë¼Ò DB */
+    /* ï¿½Ö¹ï¿½ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ DB */
             orderMapper.orderCancle(dto.getOrderId());
             
-    /* Æ÷ÀÎÆ®, Àç°í º¯È¯ */
-            /* Æ÷ÀÎÆ® */
+    /* ï¿½ï¿½ï¿½ï¿½Æ®, ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ */
+            /* ï¿½ï¿½ï¿½ï¿½Æ® */
             int calPoint = member.getPoint();
             calPoint = calPoint + orw.getUsePoint() - orw.getOrderEarnPoint();
             member.setPoint(calPoint);
             
      
-            /* Àç°í */
+            /* ï¿½ï¿½ï¿½ */
             for(OrderItemDTO ord : orw.getOrders()) {
                 ItemVO item = itemMapper.getGoodsInfo(ord.getItemId());
                 item.setItemStock(item.getItemStock() + ord.getItemCount());
@@ -170,6 +170,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public List<ItemSalesDTO> getTopSellingItems() {
         List<ItemSalesDTO> items = orderMapper.getTopSellingItems();
+        System.out.println(items + "kkkkkkkkkkkkkkk");
         for (ItemSalesDTO item : items) {
             List<AttachImageVO> imageList = attachMapper.getAttachList(item.getItemId());
             item.setImageList(imageList);

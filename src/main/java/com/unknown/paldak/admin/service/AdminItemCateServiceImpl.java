@@ -1,13 +1,21 @@
 package com.unknown.paldak.admin.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.unknown.paldak.admin.common.domain.Criteria;
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.ItemCateVO;
 import com.unknown.paldak.admin.mapper.AdminItemCateMapper;
-import lombok.AllArgsConstructor;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 @Service
 @AllArgsConstructor
 public class AdminItemCateServiceImpl implements BaseService<ItemCateVO>{
@@ -51,6 +59,13 @@ public class AdminItemCateServiceImpl implements BaseService<ItemCateVO>{
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
 	}
+	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
 	
 	public List<ItemCateVO> getListByCateParent(Criteria cri, String cateCode) {
 		return mapper.getListByCateParent(cri, cateCode);

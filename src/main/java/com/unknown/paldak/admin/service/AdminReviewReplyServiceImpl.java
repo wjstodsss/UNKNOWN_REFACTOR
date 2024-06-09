@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unknown.paldak.admin.common.domain.Criteria;
+import com.unknown.paldak.admin.common.domain.PageDTO;
 import com.unknown.paldak.admin.domain.ReviewReplyVO;
 import com.unknown.paldak.admin.mapper.AdminReviewReplyMapper;
 
@@ -70,6 +71,13 @@ public class AdminReviewReplyServiceImpl implements BaseService<ReviewReplyVO>{
 	public int getTotal(Criteria cri) {
 		return mapper.getTotalCount(cri);
 	}
+	
+	@Override
+    public PageDTO getPageMaker(Criteria cri) {
+        int total = getTotal(cri);
+        log.info("Creating PageDTO for criteria: " + cri + ", total: " + total);
+        return new PageDTO(cri, total);
+    }
 	
 	public ReviewReplyVO getByReviewId(Long reviewId) {
 		return mapper.readByReviewId(reviewId);

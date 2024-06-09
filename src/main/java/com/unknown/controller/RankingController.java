@@ -28,6 +28,7 @@ public class RankingController {
     @GetMapping("/ranking")
     public String rankingPage(Model model) {
         List<ItemSalesDTO> topSellingItems = orderService.getTopSellingItems();
+        System.out.println(topSellingItems);
         model.addAttribute("topSellingItems", topSellingItems);
         return "ranking";
     }
@@ -37,7 +38,7 @@ public class RankingController {
         String uploadFolder = "C:\\upload\\";
         Path filePath = Paths.get(uploadFolder + fileName);
 
-        // ·Î±× Ãß°¡
+        // ï¿½Î±ï¿½ ï¿½ß°ï¿½
         System.out.println("Requested file path: " + filePath.toString());
 
         Resource resource = new UrlResource(filePath.toUri());

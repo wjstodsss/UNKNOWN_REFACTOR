@@ -21,7 +21,7 @@ public interface BaseMapper<T> {
 
     public List<T> getListWithPaging(Criteria cri);
     
-    public List<T> getDescListWithPaging(Criteria cri);
+//    public List<T> getDescListWithPaging(Criteria cri);
     
     public int getTotalCount(Criteria cri);
  

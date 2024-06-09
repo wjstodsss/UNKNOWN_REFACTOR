@@ -22,7 +22,7 @@
 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" />
 
 		<!-- 데이터베이스 접속 계정 정보 설정 -->
-		<property name="username" value="Unknown" />
+		<property name="username" value="c##unknown" />
 		<property name="password" value="12341234" />
 	</bean>
 

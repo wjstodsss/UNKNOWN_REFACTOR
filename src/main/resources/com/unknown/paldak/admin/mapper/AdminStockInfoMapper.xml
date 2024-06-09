@@ -4,6 +4,9 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.unknown.paldak.admin.mapper.AdminStockInfoMapper">
+   	<select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.StockInfoVO">
+        select * from tbl_stockInfo where stockOrderId = #{stockOrderId}
+    </select>
    	
 	<resultMap id="stockInfoResultMap"
 		type="com.unknown.paldak.admin.domain.StockInfoVO">
@@ -19,7 +22,7 @@
 		<result property="isReceived" column="isReceived" />
 	</resultMap>
 	
-        <sql id="criterial">
+    <sql id="criterial">
 		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
 			<foreach item='type' collection="typeArr">
 				<trim prefix="OR">
@@ -30,8 +33,8 @@
 						<when test="type == 'N'.toString()">
 							itemName like '%'||#{keyword}||'%'
 						</when>
-						<when test="type == 'S'.toString()">
-							isReceived like '%'||'N'||'%'
+						<when test="type == 'D'.toString()">
+							TO_CHAR(orderDate, 'YYYY-MM-DD')= #{keyword}
 						</when>
 					</choose>
 				</trim>
@@ -46,9 +49,9 @@
         </selectKey>
         INSERT INTO tbl_stockInfo (stockOrderId, itemId, stockOrderQty)
         VALUES (
-        #{stockOrderId},
-        #{itemId},
-        #{stockOrderQty}
+	        #{stockOrderId},
+	        #{itemId},
+	        #{stockOrderQty}
         )
     </insert>
     
@@ -87,65 +90,48 @@
 		]]> 
 
          <choose>
-	        <when test="sortColumn != null and sortColumn == 'itemStock'">
-	            <![CDATA[ i.itemStock ]]>
+         	<when test="sortColumn != null and sortColumn == 'isReceived'">
+	            <![CDATA[ s.isReceived ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'receivedDate'">
+	            <![CDATA[ s.receivedDate ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'orderDate'">
+	            <![CDATA[ s.orderDate ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'receivedQty'">
+	            <![CDATA[ s.receivedQty ]]>
 	        </when>
 	        <when test="sortColumn != null and sortColumn == 'stockOrderQty'">
 	            <![CDATA[ s.stockOrderQty ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'stockOrderId'">
+	            <![CDATA[ s.stockOrderId ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'itemStock'">
+	            <![CDATA[ i.itemStock ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'manufacturer'">
+	            <![CDATA[ i.manufacturer ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'itemName'">
+	            <![CDATA[ i.itemName ]]>
 	        </when>
 	        <otherwise>
 	        	<![CDATA[ i.itemId ]]>
 	        </otherwise>
 	     </choose>
-        <![CDATA[ asc) i
-						WHERE
-        ]]>
-            <include refid="criterial"></include>
-       	<![CDATA[ 
-            rownum <=  #{pageNum} * #{amount}
-            ) where rn > (#{pageNum}-1) * #{amount}
-        ]]>
-    </select>
-
-    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultMap="stockInfoResultMap">
-         <![CDATA[
-        		SELECT * FROM (
-					    SELECT
-					        i.*, ROWNUM AS rn
-					    FROM (
-					            SELECT
-								    i.itemId,
-								    i.itemName,
-								    i.manufacturer,
-								    i.itemStock,
-								    s.stockOrderId,
-								    s.stockOrderQty,
-								    s.receivedQty,
-								    s.orderDate,
-								    s.receivedDate,
-								    s.isReceived
-								FROM
-								    tbl_item i
-								LEFT JOIN
-								    tbl_stockInfo s ON i.itemId = s.itemId AND s.isReceived = 'N'
-								Order by 
-		]]> 
-
-         <choose>
-	        <when test="sortColumn != null and sortColumn == 'itemStock'">
-	            <![CDATA[ i.itemStock ]]>
-	        </when>
-	        <when test="sortColumn != null and sortColumn == 'stockOrderQty'">
-	            <![CDATA[ s.stockOrderQty ]]>
+	     <choose>
+	     	<when test="sortType != null and sortType == 'desc'">
+	            <![CDATA[ desc ]]>
 	        </when>
 	        <otherwise>
-	        	<![CDATA[ i.itemId ]]>
+	        	<![CDATA[ asc  ]]>
 	        </otherwise>
-	     </choose>
-        <![CDATA[ desc) i
+         </choose>
+         <![CDATA[ nulls last ) i
 						WHERE
         ]]>
-
             <include refid="criterial"></include>
        	<![CDATA[ 
             rownum <=  #{pageNum} * #{amount}

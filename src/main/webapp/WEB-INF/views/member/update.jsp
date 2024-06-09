@@ -120,6 +120,7 @@
 									.click(
 											function() {
 												var password = $("#password")
+												console.log(password);
 														.val();
 												$
 														.ajax({

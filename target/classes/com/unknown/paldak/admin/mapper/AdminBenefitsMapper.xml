@@ -4,24 +4,28 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.unknown.paldak.admin.mapper.AdminBenefitsMapper">
-    <select id="getList" resultType="com.unknown.paldak.admin.domain.BenefitsVO">
+    <select id="getList" 
+    	resultType="com.unknown.paldak.admin.domain.BenefitsVO">
         select * from tbl_benefits where benefitsId > 0 order by benefitsId desc
     </select>
     
 
-    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.BenefitsVO">
+    <insert id="insertSelectKey" 
+    	parameterType="com.unknown.paldak.admin.domain.BenefitsVO">
         <selectKey keyProperty="benefitsId" order="BEFORE" resultType="long">
             select seq_benefits.nextval from dual
         </selectKey>
         INSERT INTO tbl_benefits (benefitsId, benefitsDescription, benefitsWriter)
         VALUES (
-        #{benefitsId},
-        #{benefitsDescription},
-        #{benefitsWriter}
+	        #{benefitsId},
+	        #{benefitsDescription},
+	        #{benefitsWriter}
         )
     </insert>
 
-    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.BenefitsVO">
+    <select id="read" 
+    	parameterType="long" 
+    	resultType="com.unknown.paldak.admin.domain.BenefitsVO">
         select * from tbl_benefits where benefitsId = #{benefitsId}
     </select>
 
@@ -47,6 +51,9 @@
 						<when test="type == 'W'.toString()">
 							i.benefitsWriter like '%'||#{keyword}||'%'
 						</when>
+						<when test="type == 'D'.toString()">
+							TO_CHAR(benefitsRegDate, 'YYYY-MM-DD')= #{keyword}
+						</when>
 					</choose>
 				</trim>
 			</foreach>
@@ -55,7 +62,9 @@
 
 
     
-    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.BenefitsVO">
+    <select id="getListWithPaging" 
+    	parameterType="com.unknown.paldak.admin.common.domain.Criteria" 
+    	resultType="com.unknown.paldak.admin.domain.BenefitsVO">
         <![CDATA[
             SELECT *
 				FROM (
@@ -81,69 +90,42 @@
 			        <when test="sortColumn != null and sortColumn == 'answer'">
 			            <![CDATA[ r.answer ]]>
 			        </when>
-			        <otherwise>
-			        	<![CDATA[ b.benefitsId ]]>
-			        </otherwise>
-			     </choose>
-			         
-		        <![CDATA[ asc
-				    ) i
-				    WHERE
-        		]]>
-            <include refid="criterial"></include>
-       <![CDATA[ 
-            rownum <=  #{pageNum} * #{amount}
-            ) where rn > (#{pageNum}-1) * #{amount}
-        ]]>
-    </select>
-
-    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.BenefitsVO">
-        <![CDATA[
-            SELECT *
-				FROM (
-				    SELECT
-				        i.*, ROWNUM AS rn
-				    FROM (
-				        SELECT
-				            b.benefitsId,
-				            b.benefitsDescription,
-				            b.benefitsWriter,
-				            b.benefitsRegDate,
-				            r.answer
-				        FROM
-				            tbl_benefits b
-				        left JOIN
-				            tbl_benefits_reply r
-				        ON
-				            b.benefitsId = r.benefitsId
-				        ORDER BY
-	           ]]> 
-
-		         <choose>
-			        <when test="sortColumn != null and sortColumn == 'answer'">
-			            <![CDATA[ r.answer ]]>
+			        <when test="sortColumn != null and sortColumn == 'benefitsDescription'">
+			            <![CDATA[ b.benefitsDescription ]]>
+			        </when>
+			        <when test="sortColumn != null and sortColumn == 'benefitsWriter'">
+			            <![CDATA[ b.benefitsWriter ]]>
+			        </when>
+			        <when test="sortColumn != null and sortColumn == 'benefitsRegDate'">
+			            <![CDATA[ b.benefitsRegDate ]]>
 			        </when>
 			        <otherwise>
 			        	<![CDATA[ b.benefitsId ]]>
 			        </otherwise>
 			     </choose>
-			         
-		        <![CDATA[ DESC
-				    ) i
-				    WHERE
-        		]]>
-            <include refid="criterial"></include>
-       <![CDATA[ 
-            rownum <=  #{pageNum} * #{amount}
-            ) where rn > (#{pageNum}-1) * #{amount}
-        ]]>
+			     <choose>
+			     	<when test="sortType != null and sortType == 'desc'">
+			            <![CDATA[ desc ]]>
+			        </when>
+			        <otherwise>
+			        	<![CDATA[ asc  ]]>
+			        </otherwise>
+		         </choose>
+		         <![CDATA[ nulls last ) i
+								WHERE
+		        ]]>
+		            <include refid="criterial"></include>
+		       	<![CDATA[ 
+		            rownum <=  #{pageNum} * #{amount}
+		            ) where rn > (#{pageNum}-1) * #{amount}
+		        ]]>
     </select>
-    
+
      <select id="getTotalCount" resultType="int">
     	SELECT COUNT(*)
 		FROM tbl_benefits i
 		left JOIN tbl_benefits_reply s ON i.benefitsId = s.benefitsId
-		and <include refid="criterial"></include>
+		where <include refid="criterial"></include>
 		1 = 1
 	</select>
 </mapper>
