@@ -1,44 +1,4 @@
 # 기능 시연 v1.1
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/cc85e459-1199-4214-b271-8058bf03dd02
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4a3a4477-3b01-49f2-ae33-c1d154740706
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/97430a08-e0f9-4965-aaae-0a2cc1fb8b1e
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/5dfe3f03-e60e-468a-a732-15acda6bda76
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/8f85f005-9fda-4dd4-b605-9bc805118422
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/c6e97de8-1b11-4049-9bfd-b294f442ee63
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/355abf66-7d2f-4c68-90d0-15aa5f0436dd
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d5ad6a3f-fd54-476a-8928-0b0e57df3714
-
-
-
-
 <details>
   <summary>v1.0</summary>
  
@@ -109,6 +69,44 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d5ad6a3f-fd54-476a
 
 ## 대시 보드
 - 주요 집계 현황: 매출, 회원, 문의, 구매 후기, 상품, 발주, 입고 현형/ 최대 구매 후기, 일일 판매액 TOP 5
+
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/cc85e459-1199-4214-b271-8058bf03dd02
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4a3a4477-3b01-49f2-ae33-c1d154740706
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/97430a08-e0f9-4965-aaae-0a2cc1fb8b1e
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/5dfe3f03-e60e-468a-a732-15acda6bda76
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/8f85f005-9fda-4dd4-b605-9bc805118422
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/c6e97de8-1b11-4049-9bfd-b294f442ee63
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/355abf66-7d2f-4c68-90d0-15aa5f0436dd
+
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d5ad6a3f-fd54-476a-8928-0b0e57df3714
+
 
 
 # 프로젝트 소개
