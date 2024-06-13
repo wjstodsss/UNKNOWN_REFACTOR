@@ -46,6 +46,9 @@
 - 해당 작업은 관리자 시스템의 15페이지 전체를 대상으로 진행/ 단위테스트와 병행하여 기능시연
 
 ## 주문 관리
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
+
 - 주문 & 배송: 주문 등록/ 주문 상태, 배송지, 배송요청 수정/등록시 회원 확인/ 주문ID, 회원ID기준 검색/ 각 탭 정렬
 - 주문 상품: 주문별 상품 내역 조회/ 주문ID 검색/ 각 탭 정렬
   
@@ -77,7 +80,12 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba
 - 발주/입고 이력: 이력 조회 - 입고 상태 확인/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
 
 - 브랜드 등록: 브랜드 등록/ 조회/ 수정/ 삭제
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
+
 - 카테고리 등록: 카테고리 등록/ 상세 조회/ 수정/ 삭제/ 카테고리ID, 카테고리명 검색/ 각 탭 정렬
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
 
 ## 대시 보드
 - 주요 집계 현황: 매출, 회원, 문의, 구매 후기, 상품, 발주, 입고 현형/ 최대 구매 후기, 일일 판매액 TOP 5
@@ -90,16 +98,11 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba
 
 
 
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/5dfe3f03-e60e-468a-a732-15acda6bda76
 
 
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
 
 
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
 
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
 
 
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/8f85f005-9fda-4dd4-b605-9bc805118422
