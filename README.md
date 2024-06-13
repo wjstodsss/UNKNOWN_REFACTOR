@@ -1,3 +1,5 @@
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
+
 # 기능 시연 v1.1
 <details>
   <summary>v1.0</summary>
@@ -25,7 +27,7 @@
 - 카테고리 등록: 카테고리 등록/ 상세 조회/ 수정/ 삭제/ 카테고리ID, 카테고리명 검색/ 순번, 카테고리명 기준 정렬
 
 
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
+
 
 
 ## 대시 보드
