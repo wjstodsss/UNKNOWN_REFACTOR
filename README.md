@@ -16,6 +16,7 @@
 - 자주 찾는 문의: 자주 찾는 문의 등록/ 상세 조회/ 제목, 내용, 카테고리, 이미지 수정/ 게시글 삭제/ 제목, 내용, 등록번호 검색/ 순번 기준 정렬
 - 구매 후기: 후기 답변 등록/ 구매 후기 등록/ 상세 조회/ 제목, 내용, 이미지 수정/ 게시글 삭제/ 제목, 내용, 상품ID 검색/ 순번, 제목, 작성자 기준 정렬
 - 질의 응답: 질의 답변 등록/ 질문 등록/ 상세 조회/ 제목, 내용, 카테고리, 이미지 수정/ 게시글 삭제/ 제목, 내용, 상품ID 검색/ 순번, 제목, 작성자 기준 정렬
+
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/cc85e459-1199-4214-b271-8058bf03dd02
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4a3a4477-3b01-49f2-ae33-c1d154740706
@@ -27,6 +28,7 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/97430a08-e0f9-4965
 - 발주/입고 이력: 이력 조회 - 입고 상태 확인/ 미입고, 발주ID, 상품명 검색/ 상품ID, 재고량, 발주량 기준 정렬
 - 브랜드 등록: 브랜드 등록/ 조회/ 수정/ 삭제
 - 카테고리 등록: 카테고리 등록/ 상세 조회/ 수정/ 삭제/ 카테고리ID, 카테고리명 검색/ 순번, 카테고리명 기준 정렬
+
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/5dfe3f03-e60e-468a-a732-15acda6bda76
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
