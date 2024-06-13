@@ -45,6 +45,36 @@
     - 이력을 고려하여 게시판과 브랜드 외의 삭제 작업은 품절, 취소로 상태를 전환하도록 구현
 - 해당 작업은 관리자 시스템의 15페이지 전체를 대상으로 진행/ 단위테스트와 병행하여 기능시연
 
+
+## 대시 보드
+- 주요 집계 현황: 매출, 회원, 문의, 구매 후기, 상품, 발주, 입고 현형/ 최대 구매 후기, 일일 판매액 TOP 5
+
+
+## 상품 관리
+- 상품 작업: 상품 등록/ 상세 조회/ 수정/ 상품명, 브랜드ID, 카테고리ID, 상품ID 검색/ 각 탭 정렬
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/8f85f005-9fda-4dd4-b605-9bc805118422
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/c6e97de8-1b11-4049-9bfd-b294f442ee63
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/355abf66-7d2f-4c68-90d0-15aa5f0436dd
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d5ad6a3f-fd54-476a-8928-0b0e57df3714
+
+- 재고 관리: 상품 재고 정보 조회/ 발주 신청/ 입고 처리/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
+- 발주/입고 이력: 이력 조회 - 입고 상태 확인/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
+
+- 브랜드 등록: 브랜드 등록/ 조회/ 수정/ 삭제
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
+
+- 카테고리 등록: 카테고리 등록/ 상세 조회/ 수정/ 삭제/ 카테고리ID, 카테고리명 검색/ 각 탭 정렬
+
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
+
+
 ## 주문 관리
 
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/e6c0762e-bbee-49be-afd0-5f39e995224e
@@ -73,33 +103,6 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4a3a4477-3b01-49f2
 - 질의 응답: 질의 답변 등록/ 질문 등록/ 상세 조회/ 제목, 내용, 카테고리, 이미지 수정/ 게시글 삭제/ 제목, 내용, 상품ID 검색/ 각 탭 정렬
 
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
-
-## 상품 관리
-- 상품 작업: 상품 등록/ 상세 조회/ 수정/ 상품명, 브랜드ID, 카테고리ID, 상품ID 검색/ 각 탭 정렬
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/8f85f005-9fda-4dd4-b605-9bc805118422
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/c6e97de8-1b11-4049-9bfd-b294f442ee63
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/355abf66-7d2f-4c68-90d0-15aa5f0436dd
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d5ad6a3f-fd54-476a-8928-0b0e57df3714
-
-- 재고 관리: 상품 재고 정보 조회/ 발주 신청/ 입고 처리/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
-- 발주/입고 이력: 이력 조회 - 입고 상태 확인/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/f20a6813-16aa-4f36-bd68-75abc32e1677
-
-- 브랜드 등록: 브랜드 등록/ 조회/ 수정/ 삭제
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a685e291-3dff-4aed-ac0d-a1bff8097745
-
-- 카테고리 등록: 카테고리 등록/ 상세 조회/ 수정/ 삭제/ 카테고리ID, 카테고리명 검색/ 각 탭 정렬
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555-a4cb-e9b62d185a63
-
-## 대시 보드
-- 주요 집계 현황: 매출, 회원, 문의, 구매 후기, 상품, 발주, 입고 현형/ 최대 구매 후기, 일일 판매액 TOP 5
 
 
 # 프로젝트 소개
