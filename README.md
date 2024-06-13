@@ -63,6 +63,10 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/cc85e459-1199-4214
 - 구매 후기: 후기 답변 등록/ 구매 후기 등록/ 상세 조회/ 제목, 내용, 이미지 수정/ 게시글 삭제/ 제목, 내용, 상품ID 검색/ 각 탭 정렬
 - 질의 응답: 질의 답변 등록/ 질문 등록/ 상세 조회/ 제목, 내용, 카테고리, 이미지 수정/ 게시글 삭제/ 제목, 내용, 상품ID 검색/ 각 탭 정렬
 
+  
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
+
+
 ## 상품 관리
 - 상품 작업: 상품 등록/ 상세 조회/ 수정/ 상품명, 브랜드ID, 카테고리ID, 상품ID 검색/ 각 탭 정렬
 - 재고 관리: 상품 재고 정보 조회/ 발주 신청/ 입고 처리/ 미입고, 발주ID, 상품명 검색/ 각 탭 정렬
@@ -77,9 +81,6 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/cc85e459-1199-4214
 
 
 
-
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba-9c1a-b1e796d76cbf
 
 
 https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4a3a4477-3b01-49f2-ae33-c1d154740706
