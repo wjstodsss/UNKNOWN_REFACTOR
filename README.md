@@ -49,6 +49,8 @@
 ## 대시 보드
 - 주요 집계 현황: 매출, 회원, 문의, 구매 후기, 상품, 발주, 입고 현형/ 최대 구매 후기, 일일 판매액 TOP 5
 
+https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/e6c0762e-bbee-49be-afd0-5f39e995224e
+
 
 ## 상품 관리
 - 상품 작업: 상품 등록/ 상세 조회/ 수정/ 상품명, 브랜드ID, 카테고리ID, 상품ID 검색/ 각 탭 정렬
@@ -76,8 +78,6 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/d57833ea-ed8f-4555
 
 
 ## 주문 관리
-
-https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/e6c0762e-bbee-49be-afd0-5f39e995224e
 
 - 주문 & 배송: 주문 등록/ 주문 상태, 배송지, 배송요청 수정/등록시 회원 확인/ 주문ID, 회원ID기준 검색/ 각 탭 정렬
 - 주문 상품: 주문별 상품 내역 조회/ 주문ID 검색/ 각 탭 정렬
