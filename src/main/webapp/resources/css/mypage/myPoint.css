@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.detail_area {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.points_title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.points_summary {
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.points_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.points_box p {
+    font-size: 16px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.point_icon {
+    width: 22px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.points_box .points_amount {
+    font-size: 32px;
+    font-weight: bold;
+    color: orange;
+}
+
+.points_details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.points_details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.points_details th, .points_details td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.points_details th {
+    background-color: #f9f9f9;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a, .pagination span {
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 10px;
+    color: #333;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}

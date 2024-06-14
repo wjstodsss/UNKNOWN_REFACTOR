@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminStockLogMapper">
+   	
+	<resultMap id="stockInfoResultMap"
+		type="com.unknown.paldak.admin.domain.StockInfoVO">
+		<id property="itemId" column="itemId" />
+		<result property="itemName" column="itemName" />
+		<result property="manufacturer" column="manufacturer" />
+		<result property="itemStock" column="itemStock" />
+		<result property="stockOrderId" column="stockOrderId" />
+		<result property="stockOrderQty" column="stockOrderQty" />
+		<result property="receivedQty" column="receivedQty" />
+		<result property="orderDate" column="orderDate" />
+		<result property="receivedDate" column="receivedDate" />
+		<result property="isReceived" column="isReceived" />
+	</resultMap>
+	
+        <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'I'.toString()">
+							stockOrderId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'N'.toString()">
+							i.itemName like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'S'.toString()">
+							isReceived like '%'||'N'||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	
+	<insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.StockInfoVO">
+        <selectKey keyProperty="stockOrderId" order="BEFORE" resultType="long">
+            select seq_stockInfo.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_stockInfo (stockOrderId, itemId, stockOrderQty)
+        VALUES (
+        #{stockOrderId},
+        #{itemId},
+        #{stockOrderQty}
+        )
+    </insert>
+    
+
+    
+    <update id="updateByStockOrderId" parameterType="com.unknown.paldak.admin.domain.StockInfoVO">
+	    update tbl_stockInfo
+	    set receivedQty=#{receivedQty},
+	        receivedDate=SYSDATE,
+	        isReceived=#{isReceived}
+	    where stockOrderId=#{stockOrderId}
+	</update>
+	
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultMap="stockInfoResultMap">
+        <![CDATA[
+        		SELECT * FROM (
+					    SELECT
+					        i.*, ROWNUM AS rn
+					    FROM (
+					            SELECT
+								    i.itemId,
+								    i.itemName,
+								    i.manufacturer,
+								    i.itemStock,
+								    s.stockOrderId,
+								    s.stockOrderQty,
+								    s.receivedQty,
+								    s.orderDate,
+								    s.receivedDate,
+								    s.isReceived 
+								FROM
+								    tbl_item i
+								JOIN
+								    tbl_stockInfo s ON i.itemId = s.itemId
+								Order by 
+		]]> 
+
+         <choose>
+	        <when test="sortColumn != null and sortColumn == 'isReceived'">
+	            <![CDATA[ s.isReceived ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'receivedDate'">
+	            <![CDATA[ s.receivedDate ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'orderDate'">
+	            <![CDATA[ s.orderDate ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'receivedQty'">
+	            <![CDATA[ s.receivedQty ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'manufacturer'">
+	            <![CDATA[ i.manufacturer ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'itemName'">
+	            <![CDATA[ i.itemName ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'itemId'">
+	            <![CDATA[ i.itemId ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'itemStock'">
+	            <![CDATA[ i.itemStock ]]>
+	        </when>
+	        <when test="sortColumn != null and sortColumn == 'stockOrderQty'">
+	            <![CDATA[ s.stockOrderQty ]]>
+	        </when>
+	        <otherwise>
+	        	<![CDATA[ s.stockOrderId ]]>
+	        </otherwise>
+	     </choose>
+	     <choose>
+            <when test="sortType != null and sortType == 'desc'">
+                <![CDATA[ desc ]]>
+            </when>
+            <otherwise>
+                <![CDATA[ asc  ]]>
+            </otherwise>
+        </choose>
+        <![CDATA[ nulls last ) i
+        WHERE
+        ]]>
+            <include refid="criterial"></include>
+       	<![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    
+    <select id="getTotalCount" resultType="int">
+    	SELECT COUNT(*)
+		FROM tbl_item i
+		JOIN tbl_stockInfo s ON i.itemId = s.itemId
+		and <include refid="criterial"></include>
+		1 = 1
+</select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.unknown.mapper.BenefitsReplyMapper">
+  	<!-- 
+  	<select id="getList" resultType="com.unknown.model.BenefitsReplyVO">
+        select * from tbl_benefits_reply where 
+        benefitsId > 0 order by benefitsReplyId desc
+    </select> -->
+  	
+  	<insert id="insert">
+		insert into tbl_benefits_reply(benefitsReplyId, benefitsId, reply, replyer) 
+		values (seq_benefits_reply.nextval, #{benefitsId}, #{reply}, #{replyer})
+	</insert>
+	 <select id="read" resultType="com.unknown.model.BenefitsReplyVO">
+		select * from tbl_benefits_reply where benefitsReplyId = #{benefitsReplyId}
+	</select>
+	<delete id="delete">
+		delete from tbl_benefits_reply where benefitsReplyId = #{benefitsReplyId}
+	</delete>	
+	
+	<!-- <update id="update">
+		update tbl_benefits_reply set reply = #{reply}, replyDate = sysdate
+		where benefitsReplyId = #{benefitsReplyId}
+	</update> -->
+	
+	<select id="getTotalCount" resultType="int">
+        select count(*) from tbl_benefits_reply where benefitsReplyId > 0
+    </select>
+    
+	<select id="getListWithPaging" resultType="com.unknown.model.BenefitsReplyVO">
+    <![CDATA[
+	select benefitsReplyId, benefitsId, reply, replyer, replyDate
+	from 
+	  tbl_benefits_reply
+	      
+    ]]>
+</select>
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminBenefitsReplyMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.BenefitsReplyVO">
+        select * from tbl_benefits_reply where benefitsReplyId > 0 order by benefitsReplyId desc
+    </select>
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.BenefitsReplyVO">
+        <selectKey keyProperty="benefitsReplyId" order="BEFORE" resultType="long">
+            select seq_benefits_reply.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_benefits_reply (benefitsReplyId, benefitsId, reply, replyer, answer)
+        VALUES (
+        #{benefitsReplyId},
+        #{benefitsId},
+        #{reply},
+        #{replyer},
+        #{answer}
+        )
+    </insert>
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.BenefitsReplyVO">
+        select * from tbl_benefits_reply where benefitsReplyId = #{benefitsReplyId}
+    </select>
+    <delete id="delete" parameterType="long">
+        delete from tbl_benefits_reply where benefitsId = #{benefitsId}
+    </delete>
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.BenefitsReplyVO">
+        update tbl_benefits_reply 
+        set reply=#{reply}, replyUpdateDate=#{replyUpdateDate}
+        where benefitsReplyId=#{benefitsReplyId}
+    </update>
+    <select id="readByBenefitsId" parameterType="long" resultType="com.unknown.paldak.admin.domain.BenefitsReplyVO">
+        select * from tbl_benefits_reply where benefitsId = #{benefitsId}
+    </select>
+</mapper>

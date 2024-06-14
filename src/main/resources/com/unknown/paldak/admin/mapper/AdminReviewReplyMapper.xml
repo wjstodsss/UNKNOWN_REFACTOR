@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminReviewReplyMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        select * from tbl_review_reply where replyId > 0 order by replyId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        <selectKey keyProperty="replyId" order="BEFORE" resultType="long">
+            select seq_review_reply.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_review_reply (replyId, reviewId, reply, replyer, answer)
+        VALUES (
+        #{replyId},
+        #{reviewId},
+        #{reply},
+        #{replyer},
+        #{answer}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        select * from tbl_review_reply where replyId = #{replyId}
+    </select>
+    
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_review_reply where replyId = #{replyId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        update tbl_review_reply 
+        set reply=#{reply}, replyUpdateDate=#{replyUpdateDate}
+        where replyId=#{replyId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							reviewId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'A'.toString()">
+							replyTypeId like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'M'.toString()">
+							replyId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        <![CDATA[
+            select replyId, reviewId, reply, replyer, replyDate, replyUpdateDate, answer 
+            from (
+            select /*+INDEX_DESC(tbl_review_reply pk_review_reply) */ rownum rn, replyId, reviewId, reply, replyer, replyDate, replyUpdateDate, answer
+            from (select * from tbl_review_reply order by replyId asc)
+            where 
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getDescListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        <![CDATA[
+            select replyId, reviewId, reply, replyer, replyDate, replyUpdateDate, answer 
+            from (
+            select /*+INDEX_DESC(tbl_review_reply pk_review_reply) */ rownum rn, replyId, reviewId, reply, replyer, replyDate, replyUpdateDate, answer
+            from (select * from tbl_review_reply order by replyId desc)
+            where  
+        ]]>
+            <include refid="criterial"></include>
+       <![CDATA[ 
+            rownum <=  #{pageNum} * #{amount}
+            ) where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="readByReviewId" parameterType="long" resultType="com.unknown.paldak.admin.domain.ReviewReplyVO">
+        select * from tbl_review_reply where reviewId = #{reviewId}
+    </select>
+    
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_review_reply where
+		<include refid="criterial"></include>
+		 replyId > 0
+</select>
+</mapper>

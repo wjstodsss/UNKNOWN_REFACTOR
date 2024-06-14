@@ -1,0 +1,154 @@
+@charset "UTF-8";
+/* update.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* 좌측 메뉴 영역 */
+.left_menu {
+    width: 200px;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+.left_menu h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-top: 1px solid gray; /* Add border to the top of h4 */
+    padding-top: 15px; /* Add padding to push the text down */
+}
+
+.left_menu ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.left_menu ul li {
+    margin-bottom: 5px;
+}
+
+.left_menu ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.left_menu ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 좌측 메뉴 영역 종료 */
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+.content_area {
+    max-width: 1300px;
+}
+
+.edit_area {
+    width: 100%;
+    max-width: 600px;
+    margin: -635px 0 0 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.wrapper {
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group select, .form-group button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%; /* 가로 너비를 100%로 설정하여 균일하게 */
+}
+
+.form-group button {
+    margin-top: 5px;
+}
+
+/* 비밀번호 일치 여부 메시지 */
+.pwck_input_re_1, .pwck_input_re_2 {
+    display: none;
+    margin-top: 5px;
+    color: green;
+}
+
+.pwck_input_re_2 {
+    color: red;
+}
+
+/* 입력값이 있는 경우 숨기기 */
+span.final_phone_ck, span.final_addr_ck {
+    display: none;
+}
+
+/* 하단 버튼 정렬 */
+.button_wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button_wrap button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update_button {
+    background-color: #ff6600;
+    color: white;
+}
+
+.cancel_button {
+    background-color: #ccc;
+}
+
+.withdraw_button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 50px 220px 0 0px;
+    float: right;
+    background-color: #222;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
