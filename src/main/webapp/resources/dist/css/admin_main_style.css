@@ -1,0 +1,252 @@
+@charset "utf-8";
+		
+
+		/* 작업 모달 스크롤 생성 */
+		.modal-content {
+  			max-height: 700px;
+    		overflow-y: auto;
+    		overflow-x: hidden;
+		}
+		
+
+		/* 작업 모달 헤더 */
+		.custom-modal-header-row {
+		    --bs-gutter-x: 0;
+		}
+		
+		.custom-modal-header-title {
+		    margin-bottom: 0;
+		}
+
+		/* custom-table */
+		.table.custom-table>thead>tr>th {
+		    vertical-align: middle;
+		    text-align: center;
+		    font-size: 12px;
+		}
+		
+		.table.custom-table>tbody>tr>td {
+		    vertical-align: middle;
+		    text-align: center;
+		    padding: 2px;
+		    font-size: 12px;
+		}
+		
+		.button-add {
+		  background-color: #f6f6f6;
+		}
+	
+		/* Hover 효과 변경 */
+		.custom-table tbody tr:hover {
+		    background-color: #f3f3f3; /* Hover 배경색 */
+		}
+	
+		
+		
+		/* 정렬 컴포넌트 th */
+		.custom-sort-component {
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		}
+		
+		.custom-sort-component .label {
+		    font-size: 10px;
+		    color: black;
+		   	text-align: center;
+ 			vertical-align: middle;
+ 			font-size: 12px;
+		}
+		
+		.custom-sort-component .sort-icons {
+		    display: flex;
+		    flex-direction: column;
+		    font-size: 10px;
+		}
+		
+		.no-anchor-text-decoration {
+		    text-decoration: none;
+		    color: black;
+		}
+		
+        /* 좌측 네비게이션 스타일 */
+        .navbar-nav .nav-link {
+            color: #333; /* 텍스트 색상 */
+        }
+        .navbar-nav .nav-link:hover {
+            background-color: #f8f9fa; /* 호버 배경색 */
+            color: #333 !important; /* 텍스트 색상 */
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background-color: #e9ecef; /* 드롭다운 호버 배경색 */
+            color: #333 !important; /* 텍스트 색상 */
+        }
+        
+        .searchForm {
+    		display: flex;
+    		margin-bottom: 10px;
+    	}
+    	
+    	/* 선택 상자 스타일링 */
+		.custom-select {
+		  margin-right: 5px;
+		  appearance: none; /* 기본 스타일 제거 */
+		  background-color: #f8f9fa; /* 배경색 설정 */
+		  border: 1px solid #ced4da; /* 테두리 스타일 설정 */
+		  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
+		  padding: 8px; /* 내부 여백 설정 */
+		  font-size: 10px; /* 폰트 크기 설정 */
+		}
+		
+		/* 선택 상자 호버 효과 */
+		.custom-select:hover {
+		  background-color: #e9ecef; /* 호버 시 배경색 변경 */
+		}
+		
+		/* 입력 필드 스타일링 */
+		.custom-keyword {
+		  margin-right: 5px;
+		  padding: 8px; /* 내부 여백 설정 */
+		  border: 1px solid #ced4da; /* 테두리 스타일 설정 */
+		  border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
+		  font-size: 10px; /* 폰트 크기 설정 */
+		}
+		
+		/* 입력 필드 호버 효과 */
+		.custom-keyword:hover {
+		  border-color: #6c757d; /* 호버 시 테두리 색상 변경 */
+		}
+		
+		/* 입력 필드 포커스 효과 */
+		.custom-keyword:focus {
+		  border-color: #4d94ff; /* 포커스 시 테두리 색상 변경 */
+		  box-shadow: 0 0 5px #4d94ff; /* 포커스 시 그림자 효과 추가 */
+		}
+		
+		.custom-keyword-btn {
+			align-content: center;
+			border: 1px solid #ced4da; /* 테두리 스타일 설정 */
+		 	border-radius: 5px; /* 테두리 모서리 둥글게 설정 */
+		}
+		
+		.custom-keyword-btn:hover {
+			border-color: #6c757d; /* 호버 시 테두리 색상 변경 */
+		}
+
+		/* 기본 버튼 스타일 */
+		.btn-board {
+		  display: inline-block;
+		  padding: 8px 16px;
+		  font-size: 12px;
+		  border: 1px solid transparent;
+		  border-radius: 5px;
+		  cursor: pointer;
+		}
+		.mt-5 {
+			margin-left: 10px;
+		}
+
+
+        .dropdown-list {
+            list-style: none;
+            padding: 0 8px;
+            font-size: small;
+            margin-top: 5px;
+            margin-bottom: 10px
+        }
+
+        .nav-link {
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px; /* 원하는 폰트 크기로 설정 */
+        }
+
+        /* 우측 테이블의 컨텐츠를 좌측 네비게이션과 동일한 높이로 맞추기 위한 스타일 */
+        .table-container {
+            display: flex;
+            align-items: flex-end;
+            height: 230px;
+            overflow: auto; /* 스크롤 추가 */
+        }
+        .table-caption {
+            caption-side: top;
+            font-size: large; /* 원하는 크기로 조정 */
+            font-weight: bold;
+        }
+        
+        .dashboard-item {
+            margin: 7.5px 0;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        .dashboard-item h4 {
+        margin-bottom: 10px;
+    }
+
+        .dashboard-item p {
+            margin-bottom: 0;
+        }
+
+        .border-none {
+            border: none;
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        .full-opacity {
+            opacity: 1;
+        }
+        
+        .benefits-description {
+		    max-width: 200px; /* 최대 너비 설정 */
+		    white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+		    overflow: hidden; /* 넘치는 내용을 숨기기 */
+		    text-overflow: ellipsis; /* 넘치는 내용을 생략 부호(...)로 표시 */
+		    border: 1px solid #ddd; /* 테두리 추가 (선택 사항) */
+		    padding: 5px; /* 패딩 추가 (선택 사항) */
+		}
+        
+        /* 기본 paginate_button 스타일 변경 */
+		.paginate_button {
+		    background-color: #f0f0f0; /* 기본 배경색 */
+		    color: #333; /* 기본 텍스트 색상 */
+		    border-radius: 4px; /* 모서리 둥글게 */
+		}
+		
+		/* hover 시 스타일 변경 */
+		.paginate_button:hover {
+		    background-color: #eee; /* hover 시 배경색 */
+		    color: #000; /* hover 시 텍스트 색상 */
+		}
+		
+		/* active 상태일 때 스타일 변경 */
+		.pagination>.active>a {
+		    background-color: #fff; /* 활성 상태 배경색 */
+		    color: #333; /* 활성 상태 텍스트 색상 */
+		    border-color: red;
+		}
+		
+		/* active 상태에서 hover 시 스타일 변경 */
+		.pagination>.active>a:hover {
+		    background-color: #eee; /* 활성 상태 hover 시 배경색 */
+		    color: #333; /* 활성 상태 hover 시 텍스트 색상 */
+		    border-color: red;
+		}
+		
+		/* height-fix */
+		.height-fix {
+			min-height: 880px;
+		}
+		
+		/* width-fix */
+		.col-lg-10 {
+			 min-width: 440px;
+		}
+		
+		
+		        

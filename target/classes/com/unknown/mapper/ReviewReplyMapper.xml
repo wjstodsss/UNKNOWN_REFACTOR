@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.ReviewReplyMapper">
+	<insert id="insert">
+		insert into tbl_review_reply(replyId, reviewId, reply, replyer) 
+		values (seq_review_reply.nextval, #{reviewId}, #{reply}, #{replyer})
+	</insert>
+	 <select id="read" resultType="com.unknown.model.ReviewReplyVO">
+		select * from tbl_review_reply where replyId = #{replyId}
+	</select>
+	<delete id="delete">
+		delete from tbl_review_reply where replyId = #{replyId}
+	</delete>	
+	<update id="update">
+		update tbl_review_reply set reply = #{reply}, replyUpdateDate = sysdate
+		where replyId = #{replyId}
+	</update>
+	<select id="getListWithPaging" resultType="com.unknown.model.ReviewReplyVO">
+		select replyId, reviewId, reply, replyer, replyDate, replyUpdateDate
+		from tbl_review_reply
+		where reviewId = #{reviewId}
+		order by replyId asc
+	</select>
+	<!-- <select id="getListWithPaging" resultType="com.unknown.model.ReviewReplyVO">
+	    <![CDATA[
+		select  replyId, reviewId, reply, replyer, replyDate, replyUpdateDate
+		from 
+		   (
+		     select /*+INDEX(tbl_review_reply idx_reply) */ 
+		        rownum rn,  replyId, reviewId, reply, replyer, replyDate, replyUpdateDate
+		      from tbl_review_reply
+		      where reviewId =  #{reviewId}
+	                  and replyId > 0 
+	                  and rownum <= #{cri.pageNum} * #{cri.amount}
+	               ) where rn > (#{cri.pageNum} -1) * #{cri.amount}
+	    ]]>
+	</select>
+	<select id="getCountbyreviewId" resultType="int">
+		<![CDATA[
+			select count(replyId) from tbl_review_reply where reviewId = #{reviewId}
+		]]>	
+	</select> -->
+	
+</mapper>

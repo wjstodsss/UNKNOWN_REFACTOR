@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.BrandMapper">
+
+	<!-- 브랜드 등록 -->
+	<insert id="brandEnroll">
+		<selectKey resultType="int" keyProperty="brandId"
+			order="BEFORE">
+			select seq_brandId.NEXTVAL from dual
+		</selectKey>
+		insert into tbl_brand(brandId, brandName, brandIntro)
+		values(#{brandId}, #{brandName}, #{brandIntro})
+	</insert>
+
+
+	<!-- 브랜드 목록 -->
+	<select id="brandGetList"
+		resultType="com.unknown.model.BrandVO">
+      
+      <![CDATA[
+          select * from (
+              select /*+INDEX_DESC(tbl_brand 인덱스명) */ 
+                  rownum as rn, brandid, brandname, regdate, updatedate
+            from tbl_brand 
+            where
+             
+    ]]>
+		<if test="keyword != null">
+			brandName like '%'||#{keyword}||'%' and
+		</if>
+            
+    <![CDATA[        
+             rownum <= #{pageNum}*#{amount}
+            )
+        where rn > (#{pageNum} - 1) * #{amount}
+      ]]>
+
+	</select>
+
+	<!-- 브랜드 수 -->
+	<select id="brandGetTotal" resultType="int">
+
+		select count(*) from tbl_brand
+
+		<if test="keyword != null">
+
+			where brandName like '%' || #{keyword} || '%'
+
+		</if>
+
+	</select>
+	
+	<!-- 브랜드 디테일 페이지 -->
+  	<select id="brandGetDetail" resultType="com.unknown.model.BrandVO">
+  	
+  		select * from tbl_brand where brandId = #{brandId}
+  	
+  	</select>
+  	
+  	<!-- 브랜드 정보 수정 -->
+  	<update id="brandModify">
+  	
+  		update tbl_brand set brandName=#{brandName}, brandIntro=#{brandIntro}, updatedate = sysdate where brandId = #{brandId}
+  	
+  	</update>
+  	
+  	<!-- 브랜드 정보 삭제 -->
+  	<delete id="brandDelete">
+  	
+  		delete from tbl_brand where brandId = #{brandId}
+  	
+  	</delete>
+
+</mapper>

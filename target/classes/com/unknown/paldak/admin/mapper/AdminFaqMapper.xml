@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.unknown.paldak.admin.mapper.AdminFaqMapper">
+    <select id="getList" resultType="com.unknown.paldak.admin.domain.FAQVO">
+        select * from tbl_faq where faqId > 0 order by faqId desc
+    </select>
+
+    <insert id="insertSelectKey" parameterType="com.unknown.paldak.admin.domain.FAQVO">
+        <selectKey keyProperty="faqId" order="BEFORE" resultType="long">
+            select seq_faq.nextval from dual
+        </selectKey>
+        INSERT INTO tbl_faq (faqId, faqTitle, faqDescription, faqCategory, faqImageURL)
+        VALUES (
+        #{faqId},
+        #{faqTitle},
+        #{faqDescription},
+        #{faqCategory},
+        #{faqImageURL}
+        )
+    </insert>
+
+    <select id="read" parameterType="long" resultType="com.unknown.paldak.admin.domain.FAQVO">
+        select * from tbl_faq where faqId = #{faqId}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from tbl_faq where faqId = #{faqId}
+    </delete>
+
+    <update id="update" parameterType="com.unknown.paldak.admin.domain.FAQVO">
+        update tbl_faq 
+        set faqTitle=#{faqTitle}, faqDescription=#{faqDescription}, faqCategory=#{faqCategory}, faqImageURL=#{faqImageURL}, faqRegdate=#{faqRegdate}, faqUpdateDate=#{faqUpdateDate}
+        where faqId=#{faqId}
+    </update>
+
+
+    <sql id="criterial">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							faqTitle like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'D'.toString()">
+							faqDescription like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'I'.toString()">
+							faqId like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+    
+    <select id="getListWithPaging" parameterType="com.unknown.paldak.admin.common.domain.Criteria" resultType="com.unknown.paldak.admin.domain.FAQVO">
+        <![CDATA[
+            select faqId, faqTitle, faqDescription, faqCategory, faqImageURL, faqRegdate, faqUpdateDate 
+            from (
+            select /*+INDEX_DESC(tbl_faq pk_faq) */ rownum rn, faqId, faqTitle, faqDescription, faqCategory, faqImageURL, faqRegdate, faqUpdateDate
+            from (select * from tbl_faq order by
+        ]]>
+        <choose>
+            <when test="sortColumn != null and sortColumn == 'faqTitle'">
+                <![CDATA[ faqTitle ]]>
+            </when>
+            <when test="sortColumn != null and sortColumn == 'faqRegdate'">
+                <![CDATA[ faqRegdate ]]>
+            </when>
+            <when test="sortColumn != null and sortColumn == 'faqUpdateDate'">
+                <![CDATA[ faqUpdateDate ]]>
+            </when>
+            <otherwise>
+                <![CDATA[ faqId ]]>
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="sortType != null and sortType == 'desc'">
+                <![CDATA[ desc ]]>
+            </when>
+            <otherwise>
+                <![CDATA[ asc  ]]>
+            </otherwise>
+        </choose>
+        <![CDATA[ nulls last )
+        WHERE
+        ]]>
+        <include refid="criterial"></include>
+        <![CDATA[
+        rownum <=  #{pageNum} * #{amount}
+        ) where rn > (#{pageNum}-1) * #{amount}
+        ]]> 
+         
+    </select>
+    
+    <select id="getTotalCount" resultType="int">
+		select count(*) from tbl_faq where
+		<include refid="criterial"></include>
+		 faqId > 0
+</select>
+</mapper>

@@ -1,0 +1,65 @@
+ @charset "UTF-8";
+ 
+  body {
+        font-family: Arial, sans-serif;
+    }
+    .content_area {
+        display: flex;
+        margin-top: 20px;
+        width:1300px;
+    }
+    .left_menu {
+        width: 20%;
+        min-width: 200px;
+        padding-right: 20px;
+    }
+    .main_content {
+        width: 80%;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .panel-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 1.8em;
+        font-weight: bold;
+    }
+    .panel-body {
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    .btn-submit {
+        background-color: #ff6a00;
+        color: white;
+        margin-right: 10px;
+    }
+    .btn-reset {
+        background-color: #f0f0f0;
+        color: black;
+    }
+    .img-responsive {
+        max-width: 500px;
+        height: auto;
+    }

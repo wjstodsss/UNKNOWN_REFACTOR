@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.unknown.mapper.BenefitsMapper">
+	<select id="getList" resultType="com.unknown.model.BenefitsVO">
+		select * from tbl_benefits where
+		benefitsId > 0 order by benefitsId desc
+	</select>
+
+	<insert id="insert">
+		insert into tbl_benefits (benefitsId, benefitsWriter, benefitsDescription)
+		values (seq_benefits.nextval, #{benefitsWriter},
+		#{benefitsDescription})
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="benefitsId" order="BEFORE"
+			resultType="long">
+			select seq_benefits.nextval from dual
+		</selectKey>
+		insert into tbl_benefits (benefitsId, benefitsWriter,
+		benefitsDescription)
+		values (#{benefitsId}, #{benefitsWriter}, #{benefitsDescription})
+	</insert>
+
+	<select id="read" resultType="com.unknown.model.BenefitsVO">
+		select * from tbl_benefits where benefitsId = #{benefitsId}
+	</select>
+
+	<delete id="delete">
+		delete from tbl_benefits where benefitsId = #{benefitsId}
+	</delete>
+
+	<update id="update">
+		update tbl_benefits
+		benefitsDescription = #{benefitsDescription},
+		benefitsWriter = #{benefitsWriter},
+		benefitsRegDate = sysdate
+		where benefitsId = #{benefitsId}
+	</update>
+
+	<sql id="criterial">
+		<trim prefix="(" suffix=")" prefixOverrides="OR">
+			<foreach item="type" collection="typeArr" separator="OR">
+				<choose>
+					<when test="type == 'C'.toString()">
+						benefitsDescription like '%' || #{keyword} || '%'
+					</when>
+				</choose>
+			</foreach>
+		</trim>
+	</sql>
+
+	<select id="getListWithPaging"
+		resultType="com.unknown.model.BenefitsVO">
+	
+	<![CDATA[ 
+		select benefitsId, benefitsDescription, benefitsWriter, benefitsRegDate from ( 
+		select /*+INDEX_DESC(tbl_benefits pk_benefits) */ rownum rn, benefitsId, benefitsDescription, benefitsWriter,
+		benefitsRegDate from tbl_benefits where ]]>
+		<include refid="criterial"></include>
+		<![CDATA[
+		rownum <= #{pageNum} * #{amount}
+		) where rn > (#{pageNum} -1) * #{amount}
+	]]>
+
+
+
+	</select>
+
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_benefits where benefitsId > 0
+	</select>
+
+
+
+	<select id="searchTest"
+		resultType="com.unknown.model.BenefitsVO">
+        <![CDATA[
+        select * from tbl_benefits where
+        ]]>
+		<trim prefix="(" suffix=")" prefixOverrides="OR">
+			<foreach item="val" index="key" collection="map"
+				separator="OR">
+				<if test="key == 'C'.toString()">
+					benefitsDescription like '%' || #{val} || '%'
+				</if>
+			</foreach>
+		</trim>
+        <![CDATA[
+        and rownum < 10
+        ]]>
+	</select>
+</mapper>
