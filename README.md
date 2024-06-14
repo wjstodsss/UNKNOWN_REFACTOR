@@ -1,5 +1,6 @@
 
-## 유지보수 개선 작업의 건
+## ![YouGotGIF](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a8ecf9fd-dde4-4c35-a95d-2cc0c96a0e5b)
+유지보수 개선 작업의 건
 
 20240610 v1.1
 - 관리자 시스템 전체 정렬 기능 통합 및 리팩토링, 참조 무결성 문제 해결, 파일업로드 로직 분리, 페이지 공통 모듈 구현, 단위테스트 병행. 
@@ -8,7 +9,7 @@
 ## 주요 작업 내용
 - 사용자 UI/UX: 정렬 일부 적용(v1.0) --> 각 메뉴 모든 탭 정렬 적용/ DB조회시 where절 조건 적용으로 구현
 - refactor: list와 descList 정렬 기준 두개의 컨트롤러(v1.0) --> 하나의 컨트롤러로 통합
-  - Criteria 도메인에 sortT![BobTheBuilderFixItGIF](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/71b7c0a8-c1e8-42d9-9a88-3af9ae97cf74)
+  - Criteria 도메인에
 ype(오름차순, 내림차순 정보)/sortColumn(정렬 기준열 정보)/groupColumn(/order, /item...엔드포인트 정보) 필드 추가
   - ▲오름 차순, ▼내림차순 사용자 경험을 고려하여 디자인 적용, 클라이언트에 받을 정보를 한 곳에 위치시키고 분리하여 재사용 includes/common-cri.jsp
   - 페이지 변경시 하나의 공통 모듈을 만들고 재사용하여 어떤 페이지에서든 페이지 재구성에 필요한 데이터를 전송할 수 있도록 구현 common-admin.js
