@@ -1,7 +1,5 @@
 
-## ![YouGotGIF](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a8ecf9fd-dde4-4c35-a95d-2cc0c96a0e5b)
-유지보수 개선 작업의 건
-
+## ☕☕☕유지보수 개선 작업의 건
 20240610 v1.1
 - 관리자 시스템 전체 정렬 기능 통합 및 리팩토링, 참조 무결성 문제 해결, 파일업로드 로직 분리, 페이지 공통 모듈 구현, 단위테스트 병행. 
 ## 작업 기간
@@ -159,6 +157,9 @@ https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/4d58dda6-de7b-4dba
 ![image](https://github.com/wjstodsss/PortFolio5_UnknownProject_In-progress/assets/68169507/cb4e271f-1223-4a31-8ac7-991c8c15f96e)
 ![image](https://github.com/wjstodsss/PortFolio5_UnknownProject_In-progress/assets/68169507/d609fc18-5036-4cb0-8ad0-de7ca3e659ee)
 ![image](https://github.com/wjstodsss/PortFolio5_UnknownProject_In-progress/assets/68169507/f19354be-228e-48d9-93cc-ff389cdbf4b6)
+
+![YouGotGIF](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/a8ecf9fd-dde4-4c35-a95d-2cc0c96a0e5b)
+
 
 
   
