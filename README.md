@@ -1,6 +1,6 @@
 
-## ![image](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/7be9970b-8f36-43b2-8b4e-a2c188dd0431)
-유지보수 개선 작업의 건
+![image](https://github.com/wjstodsss/UNKNOWN_REFACTOR/assets/68169507/7be9970b-8f36-43b2-8b4e-a2c188dd0431) ## 유지보수 개선 작업의 건
+
 20240610 v1.1
 - 관리자 시스템 전체 정렬 기능 통합 및 리팩토링, 참조 무결성 문제 해결, 파일업로드 로직 분리, 페이지 공통 모듈 구현, 단위테스트 병행. 
 ## 작업 기간
