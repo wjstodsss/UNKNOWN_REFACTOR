@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="/WEB-INF/tld/custom.tld" prefix="custom"%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,10 +21,12 @@
 		<h1>오늘의 전체 랭킹 순위</h1>
 		<div class="ranking_list">
 			<c:forEach items="${topSellingItems}" var="item" varStatus="status">
-				<div class="ranking_item <c:if test='${item.itemDiscount > 0}'>has-discount</c:if>">
+				<div
+					class="ranking_item <c:if test='${item.itemDiscount > 0}'>has-discount</c:if>">
 					<div class="rank">${status.index + 1}</div>
 					<div class="image">
-						<a href="${pageContext.request.contextPath}/goodsDetail/${item.itemId}">
+						<a
+							href="${pageContext.request.contextPath}/goodsDetail/${item.itemId}">
 							<c:choose>
 								<c:when test="${not empty item.imageList}">
 									<c:forEach var="image" items="${item.imageList}" begin="0"
@@ -59,9 +62,11 @@
 								<div class="discounted-price">
 									<span class="discount"><fmt:formatNumber
 											value="${item.itemDiscount * 100}" type="number"
-											maxFractionDigits="0" />%</span> <strong><fmt:formatNumber
-											value="${item.itemPrice * (1 - item.itemDiscount)}"
-											pattern="#,### 원" /></strong>
+											maxFractionDigits="0" />%
+									</span> 
+									<strong>
+									    <fmt:formatNumber value="${custom:truncatePrice(item.itemPrice * (1 - item.itemDiscount))}" pattern="#,###" /> 원
+									</strong>
 								</div>
 							</c:if>
 							<c:if test="${item.itemDiscount == 0}">

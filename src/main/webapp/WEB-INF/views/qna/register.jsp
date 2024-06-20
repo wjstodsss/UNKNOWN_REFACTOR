@@ -30,7 +30,7 @@
                     </div>
                     <div class="form-group">
                         <label>작성자</label>
-                        <input class="form-control" name='qnaWriter'>
+                        <input class="form-control" name='qnaWriter' value="${memberId}" readonly = "readonly">
                     </div>
                     <div class="form-group">
                         <label>문의내용</label>

@@ -42,7 +42,7 @@
 				</ul>
 				<ul class="cs_btns">
 					<li><a href="#" onclick="">고객의 제안</a></li>
-					<li><a href="#" onclick="">1:1 문의</a></li>
+					<li><a href="/qna/qna" onclick="">1:1 문의</a></li>
 				</ul>
 				<ul class="footer-sns-list">
 					<li><img src="/resources/img/facebook.png"><a href="#"

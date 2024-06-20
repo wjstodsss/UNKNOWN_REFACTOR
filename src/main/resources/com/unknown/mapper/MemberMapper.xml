@@ -40,7 +40,8 @@
 			memberMail = #{memberMail, jdbcType=VARCHAR},
 			memberAddr1 = #{memberAddr1, jdbcType=VARCHAR},
 			memberAddr2 = #{memberAddr2, jdbcType=VARCHAR},
-			memberAddr3 = #{memberAddr3, jdbcType=VARCHAR}
+			memberAddr3 = #{memberAddr3, jdbcType=VARCHAR},
+			point = #{point, jdbcType=INTEGER}
 		</set>
 		WHERE memberId = #{memberId, jdbcType=VARCHAR}
 	</update>
@@ -158,5 +159,7 @@
 		WHERE memberMail =
 		#{memberMail}
 	</update>
+	
+	
 
 </mapper>

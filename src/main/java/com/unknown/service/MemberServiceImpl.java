@@ -45,7 +45,7 @@ public class MemberServiceImpl  implements MemberService{
    
    private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
    
-   // ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
+   // ÀÓ½Ã ºñ¹Ð¹øÈ£ ±æÀÌ
     private static final int TEMP_PASSWORD_LENGTH = 8;
     
     @Autowired
@@ -56,7 +56,7 @@ public class MemberServiceImpl  implements MemberService{
    
    
 
-   /* È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+   /* È¸¿ø°¡ÀÔ*/
    @Override
    public void memberJoin(MemberVO member) throws Exception {
       
@@ -64,7 +64,7 @@ public class MemberServiceImpl  implements MemberService{
       
    }
    
-   /* ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½ ï¿½Ë»ï¿½ */
+   /* ¾ÆÀÌµð Áßº¹ °Ë»ç */
    @Override
    public int idCheck(String memberId) throws Exception {
       
@@ -74,24 +74,24 @@ public class MemberServiceImpl  implements MemberService{
    @Override
    public MemberVO memberLogin(String memberId, String rawPw) throws Exception {
        MemberVO member = membermapper.getMemberById(memberId);
-       System.out.println(member + "service111111111111111111");
+
        if (member != null && "Y".equals(member.getWithdrawal())) {
-           member.setWithdrawalMessage("Å»ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½.");
-           System.out.println("Å»ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½: " + member.getWithdrawalMessage());
-           return null; // Å»ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ð·ï¿½ Ã³ï¿½ï¿½
+           member.setWithdrawalMessage("Å»ÅðµÈ È¸¿øÀÔ´Ï´Ù.");
+           System.out.println("Å»ÅðµÈ È¸¿øÀÔ´Ï´Ù: " + member.getWithdrawalMessage());
+           return null; // Å»ÅðÇÑ È¸¿øÀº ·Î±×ÀÎ ½ÇÆÐ·Î Ã³¸®
        }
 
        if (member != null) {
-           logger.info("Raw Password: " + rawPw); // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Î±ï¿½
-           logger.info("Encoded Password from DB: " + member.getMemberPw()); // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Î±ï¿½
-           if (true) {
-               // ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ï¸ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-               performLogin(member, request.getSession()); // ï¿½ï¿½ï¿½Ç¿ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-               System.out.println("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + member.getMemberId());
+           logger.info("Raw Password: " + rawPw); // Ãß°¡µÈ ·Î±×
+           logger.info("Encoded Password from DB: " + member.getMemberPw()); // Ãß°¡µÈ ·Î±×
+           if (passwordEncoder.matches(rawPw, member.getMemberPw())) {
+               // ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏ¸é ·Î±×ÀÎ ¼º°ø
+               performLogin(member, request.getSession()); // ¼¼¼Ç¿¡ È¸¿ø Á¤º¸ ÀúÀå
+               System.out.println("·Î±×ÀÎ ¼º°ø: " + member.getMemberId());
                return member;
            } else {
-               // ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null ï¿½ï¿½È¯
-               System.out.println("ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+               // ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾ÊÀ¸¸é null ¹ÝÈ¯
+               System.out.println("ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾ÊÀ½");
                return null;
            }
        } else {
@@ -105,7 +105,7 @@ public class MemberServiceImpl  implements MemberService{
        return membermapper.getMemberById(memberId);
    }
    
-   /* È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+   /* È¸¿ø Á¤º¸ ¼öÁ¤ */
    @Override
    public void memberUpdate(MemberVO member) throws Exception {
        membermapper.memberUpdate(member);
@@ -114,29 +114,29 @@ public class MemberServiceImpl  implements MemberService{
 
 
     
-    /* È¸ï¿½ï¿½ Å»ï¿½ï¿½ */
+    /* È¸¿ø Å»Åð */
     @Override
     public boolean memberWithdraw(String memberId) throws Exception {
         try {
-            // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ Å»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½
+            // È¸¿ø »óÅÂ¸¦ Å»Åð·Î º¯°æÇÏ´Â ¸Þ¼­µå È£Ãâ
             membermapper.memberWithdraw(memberId);
-            return true; // Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            return true; // Å»Åð ¼º°ø
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            return false; // Å»Åð ½ÇÆÐ
         }
     }
     
-    /* È¸ï¿½ï¿½ Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ */
+    /* È¸¿ø Å»Åð ¿©ºÎ È®ÀÎ ¸Þ¼­µå */
     @Override
     public boolean isMemberWithdrawn(String memberId) throws Exception {
-        // memberIdï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ Å»ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½È¸ï¿½Õ´Ï´ï¿½.
+        // memberId¸¦ ÀÌ¿ëÇÏ¿© È¸¿øÀÇ Å»Åð ¿©ºÎ¸¦ Á¶È¸ÇÕ´Ï´Ù.
         Boolean withdrawal = membermapper.isMemberWithdrawn(memberId);
-        // withdrawalï¿½ï¿½ nullï¿½Ì¸ï¿½ falseï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ïµï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+        // withdrawalÀÌ nullÀÌ¸é false¸¦ ¹ÝÈ¯ÇÏµµ·Ï Ã³¸®ÇÕ´Ï´Ù.
         return withdrawal != null && withdrawal;
     }
     
-    /* ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+    /* ÁÖ¹®ÀÚ Á¤º¸ */
    @Override
    public MemberVO getMemberInfo(String memberId) {
       
@@ -144,7 +144,7 @@ public class MemberServiceImpl  implements MemberService{
       
    }
    
-    // Kakao ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    // Kakao ·Î±×ÀÎÀ» À§ÇÑ ¸Þ¼­µå
     @Override
     public String getAccessToken(String authorize_code) {
         String access_Token = "";
@@ -160,8 +160,8 @@ public class MemberServiceImpl  implements MemberService{
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=7348caf219d2fff8532a8961c20f78ab"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß±Þ¹ï¿½ï¿½ï¿½ key
-            sb.append("&redirect_uri=http://localhost:8080/member/easyGeneral"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½
+            sb.append("&client_id=7348caf219d2fff8532a8961c20f78ab"); // º»ÀÎÀÌ ¹ß±Þ¹ÞÀº key
+            sb.append("&redirect_uri=http://localhost:8080/member/easyGeneral"); // º»ÀÎÀÌ ¼³Á¤ÇÑ ÁÖ¼Ò
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -253,6 +253,7 @@ public class MemberServiceImpl  implements MemberService{
 
         KakaoVO existingKakaoUser = membermapper.getKakaoUserByEmail(kakaoVO.getK_email());
         if (existingKakaoUser != null) {
+            logger.info("Existing Kakao user found: {}", existingKakaoUser.getK_email());
             return;
         }
 
@@ -260,13 +261,14 @@ public class MemberServiceImpl  implements MemberService{
 
         if (existingMember == null) {
             try {
+                logger.info("Saving new Kakao user info: {}", kakaoVO.getK_email());
                 membermapper.saveKakaoUserInfo(kakaoVO);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
             if ("Y".equals(existingMember.getWithdrawal())) {
-                System.out.println("Å»ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½Ô´Ï´ï¿½: " + existingMember.getWithdrawalMessage());
+                logger.info("Å»ÅðµÈ È¸¿øÀÔ´Ï´Ù: {}", existingMember.getWithdrawalMessage());
                 return;
             }
             performLogin(existingMember, request.getSession());
@@ -279,21 +281,21 @@ public class MemberServiceImpl  implements MemberService{
         System.out.println("Logged in user: " + member.getMemberId());
     }
     
-    /* ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ */
+    /* ÀÌ¸ÞÀÏÀ» ±âÁØÀ¸·Î È¸¿ø Á¤º¸ Á¶È¸ */
     @Override
     public MemberVO getMemberByEmail(String memberMail) {
         return membermapper.getMemberByEmail(memberMail);
     }
 
-    // ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ßºï¿½ È®ï¿½ï¿½
+    // ÀÌ¸ÞÀÏ Áßº¹ È®ÀÎ
     @Override
     public int checkEmailDuplicate(String memberMail) {
         int count = membermapper.checkEmailDuplicate(memberMail);
-        logger.info("Checking email duplication for: {}, Count: {}", memberMail, count); // ï¿½Î±ï¿½ ï¿½ß°ï¿½
+        logger.info("Checking email duplication for: {}, Count: {}", memberMail, count); // ·Î±× Ãß°¡
         return count;
     }
 
-    // ï¿½ï¿½ï¿½Ìµï¿½ Ã£ï¿½ï¿½
+    // ¾ÆÀÌµð Ã£±â
     @Override
    public List<MemberVO> findId(String memberMail)throws Exception{
       return membermapper.findId(memberMail);
@@ -306,30 +308,30 @@ public class MemberServiceImpl  implements MemberService{
    
    @Override
    public void updatePasswordByEmail(String memberMail, String newPassword) {
-       // ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+       // ºñ¹Ð¹øÈ£ ¾÷µ¥ÀÌÆ®
        String encodedPassword = passwordEncoder.encode(newPassword);
        membermapper.updatePasswordByEmail(memberMail, encodedPassword);
    }
    
    
-   // ï¿½ï¿½Ð¹ï¿½È£ Ã£ï¿½ï¿½ - ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼ï¿½
+   // ºñ¹Ð¹øÈ£ Ã£±â - ÀÓ½Ã ºñ¹Ð¹øÈ£ »ý¼º ¹× ÀÌ¸ÞÀÏ ¹ß¼Û
    @Override
    @Transactional
    public void saveTemporaryPassword(String memberMail, String temporaryPassword) {
-       // ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+       // ºñ¹Ð¹øÈ£ ¾÷µ¥ÀÌÆ®
        membermapper.updatePasswordByEmail(memberMail, passwordEncoder.encode(temporaryPassword));
 
-       // ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼ï¿½
+       // ÀÌ¸ÞÀÏ ¹ß¼Û
        sendTemporaryPasswordEmail(memberMail, temporaryPassword);
    }
 
 
-    // ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
+    // ÀÓ½Ã ºñ¹Ð¹øÈ£ »ý¼º
     private String generateTemporaryPassword() {
-        // ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ÀÓ½Ã ºñ¹Ð¹øÈ£¸¦ »ý¼ºÇÒ ¹®ÀÚ¿­ ¹üÀ§
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        // ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ÀÓ½Ã ºñ¹Ð¹øÈ£ »ý¼º±â
         StringBuilder temporaryPassword = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < TEMP_PASSWORD_LENGTH; i++) {
@@ -339,13 +341,13 @@ public class MemberServiceImpl  implements MemberService{
         return temporaryPassword.toString();
     }
 
-    // ï¿½Ó½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼ï¿½
+    // ÀÓ½Ã ºñ¹Ð¹øÈ£ ÀÌ¸ÞÀÏ ¹ß¼Û
     private void sendTemporaryPasswordEmail(String memberMail, String temporaryPassword) {
-        // ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ÀÌ¸ÞÀÏ ³»¿ë
         String subject = "Temporary Password";
         String content = "Your temporary password is: " + temporaryPassword;
 
-        // ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ß¼ï¿½
+        // ÀÌ¸ÞÀÏ ¹ß¼Û
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(memberMail);
@@ -357,7 +359,6 @@ public class MemberServiceImpl  implements MemberService{
         }
     }
    
-
     
    
 }

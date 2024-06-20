@@ -100,8 +100,8 @@
 		resultMap="orderResultMap">
 		SELECT * FROM tbl_order
 		WHERE memberId = #{memberId}
-		AND
-		orderDate BETWEEN #{startDate} AND #{endDate}
+		AND orderDate BETWEEN #{startDate} AND #{endDate}
+		ORDER BY orderDate DESC
 	</select>
 
 	<select id="getOrdersByMemberId" resultMap="orderResultMap">
@@ -145,6 +145,7 @@
 		WHERE memberId = #{memberId}
 		AND orderState = '주문취소'
 		AND orderDate BETWEEN #{startDate} AND #{endDate}
+		ORDER BY orderDate DESC
 	</select>
 
 

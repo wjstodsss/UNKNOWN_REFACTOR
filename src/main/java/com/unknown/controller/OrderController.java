@@ -25,48 +25,54 @@ public class OrderController {
 	private MemberService memberService;
 	
 	@GetMapping("/order/{memberId}")
-	public String orderPgaeGET(@PathVariable("memberId") String memberId, OrderPageDTO opd, Model model) {
-		model.addAttribute("orderList", orderService.getGoodsInfo(opd.getOrders()));
-		model.addAttribute("memberInfo", memberService.getMemberInfo(memberId));
-		
-		return "/order";
-	}
-	
-	@PostMapping("/order")
-	public String orderPagePost(OrderDTO od, HttpServletRequest request) {
-	    System.out.println(od);
+    public String orderPageGET(@PathVariable("memberId") String memberId, OrderPageDTO opd, Model model) {
+        model.addAttribute("orderList", orderService.getGoodsInfo(opd.getOrders()));
+        model.addAttribute("memberInfo", memberService.getMemberInfo(memberId));
+        return "/order";
+    }
 
-	    if (od.getReceiver() == null || od.getReceiver().isEmpty()) {
-	        od.setReceiver(od.getMemberId()); // 기본값 설정
-	    }
+    @PostMapping("/order")
+    public String orderPagePost(OrderDTO od, HttpServletRequest request) {
+        System.out.println(od);
 
-	    orderService.order(od);
+        // 기본값 설정
+        if (od.getReceiver() == null || od.getReceiver().isEmpty()) {
+            od.setReceiver(od.getMemberId());
+        }
 
-	    try {
-	        MemberVO member = memberService.getMemberInfo(od.getMemberId());
+        if (od.getMemberAddr1() == null || od.getMemberAddr1().isEmpty()) {
+            System.out.println("MemberAddr1 is missing!");
+            // 오류 페이지로 리다이렉트
+            return "redirect:/order/error";
+        }
 
-	        // 포인트 차감 로직
-	        if (od.getUsePoint() > 0) {
-	            int currentPoints = member.getPoint();
-	            member.setPoint(currentPoints - od.getUsePoint());
-	            memberService.memberUpdate(member);
-	        }
+        orderService.order(od);
 
-	        // 포인트 적립 로직 추가
-	        int earnedPoints = od.calculateEarnedPoints();
-	        int updatedPoints = member.getPoint() + earnedPoints;
-	        member.setPoint(updatedPoints);
-	        memberService.memberUpdate(member);
+        try {
+            MemberVO member = memberService.getMemberInfo(od.getMemberId());
 
-	    } catch (Exception e) {
-	        // 예외 처리 로직 (예: 로그 기록, 사용자에게 오류 메시지 전달 등)
-	        e.printStackTrace();
-	        // 예외 발생 시 적절한 에러 페이지로 리다이렉트하거나 메시지 전달
-	        return "redirect:/errorPage";
-	    }
+            // 포인트 차감 로직
+            if (od.getUsePoint() > 0) {
+                int currentPoints = member.getPoint();
+                member.setPoint(currentPoints - od.getUsePoint());
+                System.out.println("포인트 차감: " + currentPoints + " - " + od.getUsePoint());
+                memberService.memberUpdate(member);
+            }
 
-	    return "redirect:/main";
-	}
+            // 포인트 적립 로직 추가
+            int earnedPoints = od.calculateEarnedPoints();
+            int updatedPoints = member.getPoint() + earnedPoints;
+            member.setPoint(updatedPoints);
+            System.out.println("포인트 적립: " + member.getPoint() + " + " + earnedPoints);
+            memberService.memberUpdate(member);
 
+        } catch (Exception e) {
+            // 예외 처리 로직 (예: 로그 기록, 사용자에게 오류 메시지 전달 등)
+            e.printStackTrace();
+            // 예외 발생 시 적절한 에러 페이지로 리다이렉트하거나 메시지 전달
+            return "redirect:/errorPage";
+        }
 
+        return "redirect:/main";
+    }
 }

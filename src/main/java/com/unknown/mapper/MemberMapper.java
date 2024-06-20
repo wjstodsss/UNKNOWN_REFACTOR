@@ -1,13 +1,14 @@
 package com.unknown.mapper;
 
-import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.unknown.model.KakaoVO;
 import com.unknown.model.MemberVO;
 
+@Mapper
 public interface MemberMapper {
 
 	// 회원가입
@@ -52,6 +53,8 @@ public interface MemberMapper {
 	public int findIdCheck(String memberMail) throws Exception;
 
 	 // 비밀번호 찾기를 위한 이메일로 비밀번호 변경
-    void updatePasswordByEmail(@Param("memberMail") String memberMail, @Param("newPassword") String newPassword);
+	public void updatePasswordByEmail(@Param("memberMail") String memberMail, @Param("newPassword") String newPassword);
+    
+    
     
 }

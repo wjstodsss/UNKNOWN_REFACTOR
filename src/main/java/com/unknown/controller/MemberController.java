@@ -65,44 +65,50 @@ public class MemberController {
 		session.setAttribute("verifiedEmail", email);
 	}
 
-	  @RequestMapping(value = "/easyGeneral", method = RequestMethod.GET)
-	    public String easyGeneralGET(@RequestParam(value = "code", required = false) String code,
-	            HttpServletRequest request, HttpSession session, Model model, RedirectAttributes rttr) throws Exception {
-	        if (code != null) {
-	            String access_Token = memberservice.getAccessToken(code);
-	            HashMap<String, Object> userInfo = memberservice.getUserInfo(access_Token);
+	@RequestMapping(value = "/easyGeneral", method = RequestMethod.GET)
+	public String easyGeneralGET(@RequestParam(value = "code", required = false) String code,
+	        HttpServletRequest request, HttpSession session, Model model, RedirectAttributes rttr) throws Exception {
+	    logger.info("easyGeneralGET ���� - code: {}", code);
 
-	            // īī�� ����� ������ ����
-	            memberservice.saveKakaoUserInfo(access_Token);
+	    if (code != null) {
+	        String access_Token = memberservice.getAccessToken(code);
+	        HashMap<String, Object> userInfo = memberservice.getUserInfo(access_Token);
 
-	            String email = (String) userInfo.get("email");
-	            MemberVO existingMember = memberservice.getMemberByEmail(email);
+	        // īī�� ����� ������ ����
+	        memberservice.saveKakaoUserInfo(access_Token);
 
-	            if (existingMember != null) {
-	                // Ż�� ���� üũ
-	                if ("Y".equals(existingMember.getWithdrawal())) {
-	                    session.invalidate();
-	                    rttr.addFlashAttribute("withdrawalMessage", "Ż���� ȸ���Դϴ�.");
-	                    return "redirect:/member/login";
-	                }
+	        String email = (String) userInfo.get("email");
+	        session.setAttribute("kakaoEmail", email); // �̸����� ���ǿ� ����
 
-	                session.setAttribute("member", existingMember);
-	                return "redirect:/main";  // ���� �������� �����̷�Ʈ
+	        MemberVO existingMember = memberservice.getMemberByEmail(email);
+
+	        if (existingMember != null) {
+	            // Ż�� ���� üũ
+	            if ("Y".equals(existingMember.getWithdrawal())) {
+	                session.invalidate();
+	                rttr.addFlashAttribute("withdrawalMessage", "Ż���� ȸ���Դϴ�.");
+	                return "redirect:/member/login";
 	            }
 
-	            model.addAttribute("userInfo", userInfo);
-	            model.addAttribute("nickname", userInfo.get("nickname"));
-	            model.addAttribute("email", userInfo.get("email"));
-
-	            verifyEmail(request);
-	            session.setAttribute("userInfo", userInfo);
-
-	            return "member/easyGeneral";
-	        } else {
-	            logger.info("�̿������� ������ ����");
-	            return "member/easyGeneral";
+	            session.setAttribute("member", existingMember);
+	            return "redirect:/main";  // ���� �������� �����̷�Ʈ
 	        }
+
+	        model.addAttribute("userInfo", userInfo);
+	        model.addAttribute("nickname", userInfo.get("nickname"));
+	        model.addAttribute("email", userInfo.get("email"));
+
+	        verifyEmail(request);
+	        session.setAttribute("userInfo", userInfo);
+
+	        return "member/easyGeneral";
+	    } else {
+	        logger.info("�̿������� ������ ���� - code�� ����");
+	        return "member/easyGeneral";
 	    }
+	}
+
+
 
 
 	// ȸ������ ������ �̵�
@@ -190,60 +196,66 @@ public class MemberController {
 		return Integer.toString(checkNum);
 	}
 
-	// �̸��� �ߺ� Ȯ��
-	@RequestMapping(value = "/checkEmailDuplicate", method = RequestMethod.POST)
+	@RequestMapping(value = "/checkEmailDuplicate", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Map<String, Object> checkEmailDuplicate(@RequestParam("memberMail") String memberMail) {
-		logger.info("checkEmailDuplicate() ����");
-		int count = memberservice.checkEmailDuplicate(memberMail);
-		logger.info("Received email address: {}", memberMail);
-		logger.info("Count: {}", count);
+	    logger.info("checkEmailDuplicate() ���� - �̸���: {}", memberMail);
+	    int count = memberservice.checkEmailDuplicate(memberMail);
+	    logger.info("�̸��� �ߺ� Ȯ�� ��� - ī��Ʈ: {}", count);
 
-		Map<String, Object> response = new HashMap<>();
-		response.put("isDuplicate", count == 1);
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("isDuplicate", count == 1);
 
-		return response;
+	    return response;
 	}
+
 	
 	// �α��� POST
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
-    public String loginPOST(HttpServletRequest request, MemberVO member, RedirectAttributes rttr) throws Exception {
-        HttpSession session = request.getSession();
-        String rawPw = member.getMemberPw(); // ����ڰ� �Է��� ��й�ȣ
-        String memberId = member.getMemberId(); // ����ڰ� �Է��� ���̵�
-        
-        // ȸ�� Ż�� ���� Ȯ��
-        boolean isWithdrawn = memberservice.isMemberWithdrawn(memberId);
-        if (isWithdrawn) {
-            rttr.addFlashAttribute("withdrawalMessage", "Ż���� ȸ���Դϴ�.");
-            return "redirect:/member/login";
-        }
+	public String loginPOST(HttpServletRequest request, MemberVO member, RedirectAttributes rttr) throws Exception {
+	    if (member == null || member.getMemberId() == null || member.getMemberPw() == null) {
+	        rttr.addFlashAttribute("result", "�Էµ� ȸ�� ������ ��ȿ���� �ʽ��ϴ�.");
+	        return "redirect:/member/login";
+	    }
 
-        MemberVO lvo = memberservice.memberLogin(memberId, rawPw); // ��й�ȣ �� ����
-        System.out.println(lvo + "kdk11111111111111111kkkk");
+	    HttpSession session = request.getSession();
+	    String rawPw = member.getMemberPw(); // ����ڰ� �Է��� ��й�ȣ
+	    String memberId = member.getMemberId(); // ����ڰ� �Է��� ���̵�
 
-        if (lvo != null) {
-            lvo.setMemberPw(""); // ��й�ȣ ����
-            session.setAttribute("member", lvo);
-            session.setAttribute("memberId", lvo.getMemberId());
-            session.setAttribute("point", lvo.getPoint());
-            session.setAttribute("adminCk", lvo.getAdminCk());
+	    // memberservice�� ���ԵǾ����� Ȯ��
+	    if (memberservice == null) {
+	        throw new IllegalStateException("MemberService�� ���Ե��� �ʾҽ��ϴ�.");
+	    }
 
-            if (lvo.getAdminCk() == 1) {
-                session.setAttribute("isAdmin", true);
-                System.out.println("�����ڷ� �α��εǾ����ϴ�. adminCk: " + lvo.getAdminCk());
-            } else {
-                System.out.println("����ڷ� �α��εǾ����ϴ�. adminCk: " + lvo.getAdminCk());
-            }
+	    // ȸ�� Ż�� ���� Ȯ��
+	    boolean isWithdrawn = memberservice.isMemberWithdrawn(memberId);
+	    if (isWithdrawn) {
+	        rttr.addFlashAttribute("withdrawalMessage", "Ż���� ȸ���Դϴ�.");
+	        return "redirect:/member/login";
+	    }
 
-            return "redirect:/main";
-        } else {
-            rttr.addFlashAttribute("result", 0);
-            return "redirect:/member/login";
-        }
-    }
+	    MemberVO lvo = memberservice.memberLogin(memberId, rawPw); // ��й�ȣ �� ����
 
+	    if (lvo != null) {
+	        lvo.setMemberPw(""); // ��й�ȣ ����
+	        session.setAttribute("member", lvo);
+	        session.setAttribute("memberId", lvo.getMemberId());
+	        session.setAttribute("point", lvo.getPoint());
+	        session.setAttribute("adminCk", lvo.getAdminCk());
 
+	        if (lvo.getAdminCk() == 1) {
+	            session.setAttribute("isAdmin", true);
+	            System.out.println("�����ڷ� �α��εǾ����ϴ�. adminCk: " + lvo.getAdminCk());
+	        } else {
+	            System.out.println("����ڷ� �α��εǾ����ϴ�. adminCk: " + lvo.getAdminCk());
+	        }
+
+	        return "redirect:/main";
+	    } else {
+	        rttr.addFlashAttribute("result", 0);
+	        return "redirect:/member/login";
+	    }
+	}
 
 	/* �񵿱��� �α׾ƿ� �޼��� */
 	@RequestMapping(value = "logout.do", method = RequestMethod.POST)
@@ -267,7 +279,7 @@ public class MemberController {
 
 			if (pwEncoder.matches(password, encodedPassword)) {
 				session.setAttribute("passwordConfirmed", true);
-				return "redirect:/member/login";
+				return "success";
 			}
 		}
 		return "fail";

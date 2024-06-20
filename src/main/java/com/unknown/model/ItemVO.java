@@ -27,7 +27,7 @@ public class ItemVO {
 	private String mnfcYear;
 
 	/* 제조사 */
-	private String  manufacturer;
+	private String manufacturer;
 
 	/* 카테고리 코드 */
 	private String cateCode;
@@ -55,7 +55,11 @@ public class ItemVO {
 
 	/* 수정 날짜 */
 	private Date updateDate;
-	
+
 	/* 이미지 정보 */
 	private List<AttachImageVO> imageList;
+
+	private String itemState;
+
+	private long itemStateId;
 }

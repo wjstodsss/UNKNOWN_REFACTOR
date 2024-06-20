@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 </head>
 <body>
     <%@ include file="/WEB-INF/views/includes/header.jsp"%>
-
+    
     <div class="wrap">
         <div class="content_area">
             <div class="top_section">
@@ -51,23 +51,55 @@
             <div class="detail_area">
                 <div class="order_summary">
                     <h3>최근 주문내역</h3>
-                    <p>최근 3개월 내에 주문내역이 없습니다.</p>
+                    <c:if test="${empty recentOrders}">
+                        <p>최근 3개월 내에 주문내역이 없습니다.</p>
+                    </c:if>
+                    <c:if test="${not empty recentOrders}">
+                        <ul>
+                            <c:forEach var="order" items="${recentOrders}">
+                                <li>${order.orderId} - ${order.orderDate}</li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </div>
                 <div class="recent_viewed_products">
                     <h3>최근 본 상품</h3>
-                    <p>최근 본 상품이 없습니다.</p>
-                </div>
-                <div class="reviews">
-                    <h3>평한상품</h3>
-                    <p>평한 상품이 없습니다.</p>
+                    <c:if test="${empty recentItems}">
+                        <p>최근 본 상품이 없습니다.</p>
+                    </c:if>
+                    <c:if test="${not empty recentItems}">
+                        <ul>
+                            <c:forEach var="item" items="${recentItems}">
+                                <li>${item.itemName}</li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </div>
                 <div class="product_reviews">
                     <h3>상품후기</h3>
-                    <p>작성 가능한 후기가 없습니다.</p>
+                    <c:if test="${empty reviewList}">
+                        <p>작성한 후기가 없습니다.</p>
+                    </c:if>
+                    <c:if test="${not empty reviewList}">
+                        <ul>
+                            <c:forEach var="review" items="${reviewList}">
+                                <li>${review.reviewId} - ${review.reviewRegdate}</li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </div>
                 <div class="one_to_one_inquiry">
                     <h3>1:1 문의</h3>
-                    <p>문의하신 사항이 없습니다.</p>
+                    <c:if test="${empty qnaList}">
+                        <p>문의하신 사항이 없습니다.</p>
+                    </c:if>
+                    <c:if test="${not empty qnaList}">
+                        <ul>
+                            <c:forEach var="qna" items="${qnaList}">
+                                <li>${qna.qnaId} - ${qna.qnaRegdate}</li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </div>
             </div>
             <%@ include file="/WEB-INF/views/includes/leftmenu.jsp"%>
