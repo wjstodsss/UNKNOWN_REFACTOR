@@ -1,7 +1,5 @@
 package com.unknown.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,167 +44,164 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderPageItemDTO> getGoodsInfo(List<OrderPageItemDTO> orders) {
-
-        List<OrderPageItemDTO> result = new ArrayList<OrderPageItemDTO>();
-
+        List<OrderPageItemDTO> result = new ArrayList<>();
         for (OrderPageItemDTO ord : orders) {
-
+            System.out.println("Processing itemId: " + ord.getItemId()); // ·Î±× Ãß°¡
+            if (ord.getItemId() == 0) {
+                System.out.println("Invalid itemId: " + ord.getItemId()); // ·Î±× Ãß°¡
+                continue;
+            }
             OrderPageItemDTO goodsInfo = orderMapper.getGoodsInfo(ord.getItemId());
-
+            if (goodsInfo == null) {
+                System.out.println("No goodsInfo found for itemId: " + ord.getItemId()); // ·Î±× Ãß°¡
+                continue; // NullPointerException ¹æÁö
+            }
             goodsInfo.setItemCount(ord.getItemCount());
-
             goodsInfo.initSaleTotal();
-
             List<AttachImageVO> imageList = attachMapper.getAttachList(goodsInfo.getItemId());
-
             goodsInfo.setImageList(imageList);
-
             result.add(goodsInfo);
-
         }
-
         return result;
     }
+
 
     @Override
     @Transactional
     public void order(OrderDTO ord) {
-        
-        // receiver ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-        if(ord.getReceiver() == null || ord.getReceiver().isEmpty()) {
-            ord.setReceiver(ord.getMemberId()); // memberIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // receiver °ª ¼³Á¤
+        if (ord.getReceiver() == null || ord.getReceiver().isEmpty()) {
+            ord.setReceiver(ord.getMemberId()); // memberId·Î ¼³Á¤
         }
 
-        /* ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
-        /* ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+        /* »ç¿ëÇÒ µ¥ÀÌÅÍ°¡Á®¿À±â */
+        /* ÁÖ¹® Á¤º¸ */
         List<OrderItemDTO> ords = new ArrayList<>();
         for (OrderItemDTO oit : ord.getOrders()) {
             OrderItemDTO orderItem = orderMapper.getOrderInfo(oit.getItemId());
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // ¼ö·® ¼ÂÆÃ
             orderItem.setItemCount(oit.getItemCount());
-            // ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // ±âº»Á¤º¸ ¼ÂÆÃ
             orderItem.initSaleTotal();
-            // Listï¿½ï¿½Ã¼ ï¿½ß°ï¿½
+            // List°´Ã¼ Ãß°¡
             ords.add(orderItem);
         }
-        /* OrderDTO ï¿½ï¿½ï¿½ï¿½ */
+        /* OrderDTO ¼ÂÆÃ */
         ord.setOrders(ords);
         ord.getOrderPriceInfo();
 
-        /* DB ï¿½Ö¹ï¿½,ï¿½Ö¹ï¿½ï¿½ï¿½Ç°(,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½Ö±ï¿½ */
+        // Log OrderDTO details
+        System.out.println("OrderDTO: " + ord.toString());
 
-        /* orderIdï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ OrderDTOï¿½ï¿½Ã¼ orderIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+        // Check if mandatory fields are set
+        if (ord.getMemberAddr1() == null || ord.getMemberAddr1().isEmpty()) {
+            throw new IllegalArgumentException("MemberAddr1 is missing!");
+        }
+
+        /* DB ÁÖ¹®,ÁÖ¹®»óÇ°(,¹è¼ÛÁ¤º¸) ³Ö±â */
+        /* orderId¸¸µé±â ¹× OrderDTO°´Ã¼ orderId¿¡ ÀúÀå */
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("_yyyyMMddmm");
         String orderId = ord.getMemberId() + format.format(date);
         ord.setOrderId(orderId);
 
-        /* dbï¿½Ö±ï¿½ */
-        orderMapper.enrollOrder(ord); // tbl_order ï¿½ï¿½ï¿½
-        for (OrderItemDTO oit : ord.getOrders()) { // tbl_orderItem ï¿½ï¿½ï¿½
+        /* db³Ö±â */
+        orderMapper.enrollOrder(ord); // tbl_order µî·Ï
+        for (OrderItemDTO oit : ord.getOrders()) { // tbl_orderItem µî·Ï
             oit.setOrderId(orderId);
             orderMapper.enrollOrderItem(oit);
         }
 
-        /* ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+        /* Àç°í º¯µ¿ Àû¿ë */
         for (OrderItemDTO oit : ord.getOrders()) {
-            /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ */
+            /* º¯µ¿ Àç°í °ª ±¸ÇÏ±â */
             ItemVO item = itemMapper.getGoodsInfo(oit.getItemId());
             item.setItemStock(item.getItemStock() - oit.getItemCount());
-            /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ DB ï¿½ï¿½ï¿½ï¿½ */
+            /* º¯µ¿ °ª DB Àû¿ë */
             orderMapper.deductStock(item);
         }
 
-        /* ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ */
+        /* Àå¹Ù±¸´Ï Á¦°Å */
         for (OrderItemDTO oit : ord.getOrders()) {
             CartDTO dto = new CartDTO();
             dto.setMemberId(ord.getMemberId());
             dto.setItemId(oit.getItemId());
-
             cartMapper.deleteOrderCart(dto);
         }
-
     }
 
-    /* ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ */
+    /* ÁÖ¹®Ãë¼Ò */
     @Override
     @Transactional
     public void orderCancle(OrderCancelDTO dto) {
-        
-        /* ï¿½Ö¹ï¿½, ï¿½Ö¹ï¿½ï¿½ï¿½Ç° ï¿½ï¿½Ã¼ */
-        /*È¸ï¿½ï¿½*/
-            MemberVO member = memberMapper.getMemberInfo(dto.getMemberId());
-        /*ï¿½Ö¹ï¿½ï¿½ï¿½Ç°*/
-            List<OrderItemDTO> ords = orderMapper.getOrderItemInfo(dto.getOrderId());
-            for(OrderItemDTO ord : ords) {
-                ord.initSaleTotal();
-            }
-        /* ï¿½Ö¹ï¿½ */
-            OrderDTO orw = orderMapper.getOrder(dto.getOrderId());
-            orw.setOrders(ords);
-            
-            orw.getOrderPriceInfo();
-            
-    /* ï¿½Ö¹ï¿½ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ DB */
-            orderMapper.orderCancle(dto.getOrderId());
-            
-    /* ï¿½ï¿½ï¿½ï¿½Æ®, ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ */
-            /* ï¿½ï¿½ï¿½ï¿½Æ® */
-            int calPoint = member.getPoint();
-            calPoint = calPoint + orw.getUsePoint() - orw.getOrderEarnPoint();
-            member.setPoint(calPoint);
-            
-     
-            /* ï¿½ï¿½ï¿½ */
-            for(OrderItemDTO ord : orw.getOrders()) {
-                ItemVO item = itemMapper.getGoodsInfo(ord.getItemId());
-                item.setItemStock(item.getItemStock() + ord.getItemCount());
-                orderMapper.deductStock(item);
-            }
+        /* ÁÖ¹®, ÁÖ¹®»óÇ° °´Ã¼ */
+        /*È¸¿ø*/
+        MemberVO member = memberMapper.getMemberInfo(dto.getMemberId());
+        /*ÁÖ¹®»óÇ°*/
+        List<OrderItemDTO> ords = orderMapper.getOrderItemInfo(dto.getOrderId());
+        for (OrderItemDTO ord : ords) {
+            ord.initSaleTotal();
+        }
+        /* ÁÖ¹® */
+        OrderDTO orw = orderMapper.getOrder(dto.getOrderId());
+        orw.setOrders(ords);
+        orw.getOrderPriceInfo();
 
+        /* ÁÖ¹®»óÇ° Ãë¼Ò DB */
+        orderMapper.orderCancle(dto.getOrderId());
+
+        /* Æ÷ÀÎÆ®, Àç°í º¯È¯ */
+        /* Æ÷ÀÎÆ® */
+        int calPoint = member.getPoint();
+        calPoint = calPoint + orw.getUsePoint() - orw.getOrderEarnPoint();
+        member.setPoint(calPoint);
+
+        /* Àç°í */
+        for (OrderItemDTO ord : orw.getOrders()) {
+            ItemVO item = itemMapper.getGoodsInfo(ord.getItemId());
+            item.setItemStock(item.getItemStock() + ord.getItemCount());
+            orderMapper.deductStock(item);
+        }
     }
-    
+
     @Override
     @Transactional
     public List<ItemSalesDTO> getTopSellingItems() {
         List<ItemSalesDTO> items = orderMapper.getTopSellingItems();
-        System.out.println(items + "kkkkkkkkkkkkkkk");
         for (ItemSalesDTO item : items) {
             List<AttachImageVO> imageList = attachMapper.getAttachList(item.getItemId());
             item.setImageList(imageList);
         }
         return items;
     }
-    
+
     @Override
     public List<OrderDTO> getOrdersByMemberId(String memberId) {
         return orderMapper.getOrdersByMemberId(memberId);
     }
-    
+
     @Override
     public List<OrderItemDTO> getOrderItemsByMemberId(String memberId) {
         return orderMapper.getOrderItemsByMemberId(memberId);
     }
-    
+
     @Override
     public List<OrderDTO> getOrdersByMemberIdAndDateRange(String memberId, String startDate, String endDate) {
         return orderMapper.getOrdersByMemberIdAndDateRange(memberId, startDate, endDate);
     }
-    
+
     @Override
     public List<OrderItemDTO> getOrderItemsByOrderId(String orderId) {
         return orderMapper.getOrderItemsByOrderId(orderId);
     }
-    
+
     @Override
     public List<OrderDTO> getCanceledOrdersByMemberIdAndDateRange(String memberId, String startDate, String endDate) {
         return orderMapper.getCanceledOrdersByMemberIdAndDateRange(memberId, startDate, endDate);
     }
-    
 
     @Override
     public List<ItemVO> getBottomRankedItems() {
         return itemMapper.getBottomRankedItems();
     }
-    
 }

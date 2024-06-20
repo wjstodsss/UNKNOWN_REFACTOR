@@ -326,6 +326,7 @@
 			
 			let form_contents ='';
 			let orderNumber = 0;
+			let hasCheckedItems = false; // 주문 가능한 아이템이 있는지 확인
 			
 			$(".cart_info_td").each(function(index, element){
 				
@@ -341,9 +342,15 @@
 					form_contents += itemCount_input;
 					
 					orderNumber += 1;
+					hasCheckedItems = true; // 주문 가능한 아이템이 있음
 					
 				}
 			});	
+
+			if (!hasCheckedItems) { // 주문 가능한 아이템이 없을 때
+				alert("주문할 상품을 장바구니에 추가하세요.");
+				return;
+			}
 
 			$(".order_form").html(form_contents);
 			$(".order_form").submit();

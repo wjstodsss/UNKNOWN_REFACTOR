@@ -19,9 +19,11 @@ public void register(QNAVO qnaVO);
 	
 	public int getTotal(Criteria cri);
 
-	
-
 	public List<QNACategoryVO> getAllCategories();
 
-	QNACategoryVO getCategoryById(Long categoryId);
+	public QNACategoryVO getCategoryById(Long categoryId);
+	
+	public List<QNAVO> getListByMemberId(String memberId, Criteria cri);
+	
+	public int getTotalByMemberId(String memberId, Criteria cri);
 }

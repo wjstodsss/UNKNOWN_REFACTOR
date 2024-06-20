@@ -80,18 +80,28 @@
 	<select id="getGoodsInfo" resultType="com.unknown.model.ItemVO">
 
 		select a.ITEMID,
-		a.ITEMNAME, a.BRANDID, b.BRANDNAME, a.MNFCYEAR,
+		a.ITEMNAME,
+		a.BRANDID,
+		b.BRANDNAME,
+		a.MNFCYEAR,
 		a.MANUFACTURER,
-		a.CATECODE, c.CATENAME, a.ITEMPRICE, a.ITEMSTOCK,
+		a.CATECODE,
+		c.CATENAME,
+		a.ITEMPRICE,
+		a.ITEMSTOCK,
 		a.ITEMDISCOUNT,
-		a.ITEMINTRO, a.ITEMCONTENTS
-		from tbl_item a left outer join tbl_brand b
-		on a.brandId = b.brandId
-		left outer join tbl_itemcate c on a.cateCode =
-		c.cateCode
-		where itemId = ${itemId}
+		a.ITEMINTRO,
+		a.ITEMCONTENTS,
+		nvl(d.ITEMSTATE, '판매') as ITEMSTATE,
+		d.ITEMSTATEID
+		from tbl_item a
+		left outer join tbl_brand b on a.brandId = b.brandId
+		left outer join tbl_itemcate c on a.cateCode = c.cateCode
+		left outer join tbl_itemState d on a.itemId = d.itemId
+		where a.itemId = #{itemId}
 
 	</select>
+
 
 	<!-- 모든 상품 리스트 -->
 	<select id="getAllItems" resultType="com.unknown.model.ItemVO">

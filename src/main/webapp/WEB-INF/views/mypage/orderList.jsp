@@ -16,66 +16,78 @@
     
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
-    function setDateRange(event, months) {
-        // 모든 버튼의 active 클래스 제거
-        var buttons = document.querySelectorAll('.date_range_button');
-        buttons.forEach(function(button) {
-            button.classList.remove('active');
-        });
-
-        // 클릭된 버튼에 active 클래스 추가
-        var clickedButton = event.target;
-        clickedButton.classList.add('active');
-
-        // 날짜 범위 설정
-        var endDate = new Date();
-        endDate.setDate(endDate.getDate() + 1); // 오늘 날짜의 다음 날로 설정
-        var startDate = new Date();
-        startDate.setMonth(startDate.getMonth() - months);
-
-        document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
-        document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
-    }
-
-    // Set initial date range based on server-side values
-    document.addEventListener('DOMContentLoaded', function() {
-        var endDate = new Date().toISOString().split('T')[0];
-        var startDate = new Date();
-        startDate.setMonth(startDate.getMonth() - 1); // 현재 날짜에서 한 달 전으로 설정
-        startDate = startDate.toISOString().split('T')[0];
-
-        document.getElementById('startDate').value = startDate;
-        document.getElementById('endDate').value = endDate;
-
-        // 초기에 설정된 날짜 범위에 맞는 버튼에 active 클래스 추가
-        var initialRange = 1; // 기본적으로 1개월로 설정
-        var buttons = document.querySelectorAll('.date_range_button');
-        buttons.forEach(function(button) {
-            if (parseInt(button.getAttribute('onclick').match(/\d+/)[0]) === initialRange) {
-                button.classList.add('active');
-            }
-        });
+function setDateRange(event, months) {
+    var buttons = document.querySelectorAll('.date_range_button');
+    buttons.forEach(function(button) {
+        button.classList.remove('active');
     });
 
-    function cancelOrder(orderId) {
-        if (confirm("정말 주문을 취소하시겠습니까?")) {
-            $.ajax({
-                url: '${pageContext.request.contextPath}/mypage/cancelOrder',
-                type: 'POST',
-                data: {
-                    orderId: orderId
-                },
-                success: function(response) {
-                    alert("주문이 취소되었습니다.");
-                    location.reload(); // 페이지 새로고침
-                },
-                error: function(xhr, status, error) {
-                    alert("주문 취소에 실패했습니다. 다시 시도해주세요.");
-                }
-            });
+    var clickedButton = event.target;
+    clickedButton.classList.add('active');
+
+    var endDate = new Date();
+    var displayedEndDate = new Date(); // 오늘 날짜로 보이게 하기 위한 변수
+    var startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - months);
+
+    endDate.setDate(endDate.getDate() + 1); // 오늘 날짜의 다음 날로 설정
+
+    document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+    document.getElementById('endDate').value = displayedEndDate.toISOString().split('T')[0];
+
+    // 실제 필터링에 사용할 hidden input 설정
+    document.getElementById('realEndDate').value = endDate.toISOString().split('T')[0];
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var endDate = new Date();
+    var displayedEndDate = new Date(); // 오늘 날짜로 보이게 하기 위한 변수
+    var startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - ${selectedRange}); // 선택된 기간에 따라 설정
+
+    endDate.setDate(endDate.getDate() + 1); // 오늘 날짜의 다음 날로 설정
+
+    document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+    document.getElementById('endDate').value = displayedEndDate.toISOString().split('T')[0];
+
+    // 실제 필터링에 사용할 hidden input 설정
+    document.getElementById('realEndDate').value = endDate.toISOString().split('T')[0];
+
+    var initialRange = ${selectedRange}; // 서버에서 전달된 선택된 기간
+    var buttons = document.querySelectorAll('.date_range_button');
+    buttons.forEach(function(button) {
+        if (parseInt(button.getAttribute('onclick').match(/\d+/)[0]) === initialRange) {
+            button.classList.add('active');
         }
+    });
+
+    // 1회만 폼을 자동으로 제출하여 1개월 동안의 주문 내역을 조회
+    if (!sessionStorage.getItem('isFormSubmitted')) {
+        document.getElementById('dateForm').submit();
+        sessionStorage.setItem('isFormSubmitted', 'true');
     }
+});
+
+function cancelOrder(orderId) {
+    if (confirm("정말 주문을 취소하시겠습니까?")) {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/mypage/cancelOrder',
+            type: 'POST',
+            data: {
+                orderId: orderId
+            },
+            success: function(response) {
+                alert("주문이 취소되었습니다.");
+                location.reload(); // 페이지 새로고침
+            },
+            error: function(xhr, status, error) {
+                alert("주문 취소에 실패했습니다. 다시 시도해주세요.");
+            }
+        });
+    }
+}
 </script>
+
 
 </head>
 <body>
@@ -91,6 +103,7 @@
                 <input type="date" id="startDate" name="startDate"> 
                 <label for="endDate">~</label>
                 <input type="date" id="endDate" name="endDate" value="${endDate}">
+                <input type="hidden" id="realEndDate" name="realEndDate" value="${realEndDate}">
                 <button type="submit" class="filter_button">조회하기</button>
             </form>
             <div class="filter_buttons">

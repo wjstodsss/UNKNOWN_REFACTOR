@@ -4,38 +4,32 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.unknown.mapper.ReviewMapper">
 	<select id="getList" resultType="com.unknown.model.ReviewVO">
-		select * from tbl_review where
-		reviewId > 0 order by reviewId desc
+		select * from tbl_review where reviewId > 0 order by reviewId desc
 	</select>
+
 	<insert id="insert">
-		insert into tbl_review (reviewId, reviewTitle,
-		itemId, reviewWriter,
+		insert into tbl_review (reviewId, reviewTitle, itemId, reviewWriter,
 		reviewContent, reviewImageURL)
-		values
-		(seq_review.nextval, #{reviewTitle}, #{itemId}, #{reviewWriter},
+		values (seq_review.nextval, #{reviewTitle}, #{itemId}, #{reviewWriter},
 		#{reviewContent}, #{reviewImageURL})
 	</insert>
 
 	<insert id="insertSelectKey">
 		<selectKey keyProperty="reviewId" order="BEFORE"
 			resultType="long">
-			select seq_reviewId.nextval from dual
+			select seq_review.nextval from dual
 		</selectKey>
-
-		insert into tbl_review (reviewId, reviewTitle , itemId, reviewWriter,
+		insert into tbl_review (reviewId, reviewTitle, itemId, reviewWriter,
 		reviewContent, reviewImageURL)
-		values
-		(#{reviewId}, #{reviewTitle},
-		#{itemId}, #{reviewWriter}, #{reviewContent}, #{reviewImageURL} )
+		values (#{reviewId}, #{reviewTitle}, #{itemId}, #{reviewWriter},
+		#{reviewContent}, #{reviewImageURL})
 	</insert>
 
 	<select id="read" resultType="com.unknown.model.ReviewVO">
 		SELECT r.*, i.itemName
-		FROM
-		tbl_review r
+		FROM tbl_review r
 		LEFT JOIN tbl_item i ON r.itemId = i.itemId
-		WHERE
-		r.reviewId = #{reviewId}
+		WHERE r.reviewId = #{reviewId}
 	</select>
 
 	<delete id="delete">
@@ -44,13 +38,11 @@
 
 	<update id="update">
 		update tbl_review
-		set reviewTitle = #{reviewTitle },
-		reviewContent=
-		#{reviewContent},
-		reviewImageURL=#{reviewImageURL},
+		set reviewTitle = #{reviewTitle},
+		reviewContent = #{reviewContent},
+		reviewImageURL = #{reviewImageURL},
 		reviewUpdateDate = sysdate
-		where
-		reviewId = #{reviewId}
+		where reviewId = #{reviewId}
 	</update>
 
 	<sql id="criterial">
@@ -59,12 +51,11 @@
 				<trim prefix="OR">
 					<choose>
 						<when test="type == 'T'.toString()">
-							reviewTitle like '%'||#{keyword}||'%'
+							reviewTitle like '%' || #{keyword} || '%'
 						</when>
 						<when test="type == 'C'.toString()">
-							reviewContent like '%'||#{keyword}||'%'
+							reviewContent like '%' || #{keyword} || '%'
 						</when>
-
 					</choose>
 				</trim>
 			</foreach>
@@ -73,44 +64,52 @@
 
 	<select id="getListWithPaging"
 		resultType="com.unknown.model.ReviewVO">
-    <![CDATA[ 
-        select reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL,reviewRegdate, reviewUpdateDate from ( 
-        select /*+INDEX_DESC(tbl_review pk_review) */ rownum rn, reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL,
-        reviewRegdate, reviewUpdateDate from tbl_review where ]]>
-		<include refid="criterial"></include>
+    <![CDATA[
+        select reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL, reviewRegdate, reviewUpdateDate 
+        from (
+            select rownum rn, reviewId, itemId, reviewTitle, reviewWriter, reviewContent, reviewImageURL, reviewRegdate, reviewUpdateDate 
+            from tbl_review
+            where
+        ]]>
+		<include refid="criterial" />
         <![CDATA[
-        rownum <= #{pageNum} * #{amount}
-        ) where rn > (#{pageNum} -1) * #{amount}
+            and rownum <= #{pageNum} * #{amount}
+            order by reviewId desc
+        ) where rn > (#{pageNum} - 1) * #{amount}
     ]]>
-
 	</select>
+
 	<select id="getTotalCount" resultType="int">
 		select count(*) from tbl_review where
-		<include refid="criterial"></include>
+		<include refid="criterial" />
 		reviewId > 0
 	</select>
 
 	<select id="getListByItemId"
 		resultType="com.unknown.model.ReviewVO">
-		SELECT * FROM tbl_review WHERE itemId = #{itemId} ORDER BY
-		reviewId DESC
+		SELECT * FROM tbl_review WHERE itemId = #{itemId} ORDER BY reviewId DESC
 	</select>
 
 	<select id="getListByMemberId"
 		resultType="com.unknown.model.ReviewVO">
     <![CDATA[
-        SELECT * FROM(
-            SELECT rownum rn, t.* FROM tbl_review t WHERE reviewWriter = #{memberId} ORDER BY reviewId DESC
-        ) WHERE rownum <= #{pageNum} * #{amount}
-        AND rn > (#{pageNum} -1) * #{amount}
+    SELECT *
+    FROM (
+        SELECT A.*, ROWNUM rnum
+        FROM (
+            SELECT * FROM tbl_review
+            WHERE reviewWriter = #{memberId}
+            ORDER BY reviewId DESC
+        ) A
+        WHERE ROWNUM <= #{pageNum} * #{amount}
+    )
+    WHERE rnum > (#{pageNum} - 1) * #{amount}
     ]]>
 	</select>
 
+
 	<select id="getTotalByMemberId" resultType="int">
-		SELECT COUNT(*)
-		FROM
-		tbl_review
-		WHERE reviewWriter = #{memberId}
+		SELECT COUNT(*) FROM tbl_review WHERE reviewWriter = #{memberId}
 	</select>
 
 	<select id="getItemNameById" resultType="string">
@@ -120,5 +119,4 @@
 	<select id="getReviewWriterByReviewId" resultType="string">
 		SELECT reviewWriter FROM tbl_review WHERE reviewId = #{reviewId}
 	</select>
-
 </mapper>

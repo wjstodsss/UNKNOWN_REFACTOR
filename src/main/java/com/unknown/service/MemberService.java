@@ -48,14 +48,14 @@ public interface MemberService {
 	
 	// 아이디 찾기
 	public List<MemberVO> findId(String memberMail) throws Exception;
-
+	
+	// 찾은 아이디 확인
 	public int findIdCheck(String memberMail) throws Exception;
 	
-	// 이메일을 기준으로 회원의 비밀번호를 업데이트합니다.
-	void updatePasswordByEmail(String memberMail, String newPassword);
+	// 이메일을 기준으로 회원의 비밀번호를 업데이트
+	public void updatePasswordByEmail(String memberMail, String newPassword);
 	
-	// 임시 비밀번호를 저장하는 메서드입니다.
-	void saveTemporaryPassword(String memberMail, String temporaryPassword);
-	
-	
+	// 임시 비밀번호를 저장하는 메서드
+	public void saveTemporaryPassword(String memberMail, String temporaryPassword);
+
 }

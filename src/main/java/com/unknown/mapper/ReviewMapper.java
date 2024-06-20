@@ -29,11 +29,11 @@ public List<ReviewVO> getList();
 	
 	public List<ReviewVO> getListByItemId(int itemId);
 	
-	List<ReviewVO> getListByMemberId(@Param("memberId") String memberId,@Param("amount") int amount, @Param("pageNum") int pageNum);
-	
-	int getTotalByMemberId(@Param("memberId") String memberId, @Param("cri") Criteria cri);
-
 	public String getItemNameById(int itemId);
-
+	
 	public String getReviewWriterByReviewId(Long reviewId);
+
+	public List<ReviewVO> getListByMemberId(@Param("memberId") String memberId, @Param("amount") int amount, @Param("pageNum") int pageNum);
+
+	public int getTotalByMemberId(@Param("memberId") String memberId, @Param("cri") Criteria cri);
 }

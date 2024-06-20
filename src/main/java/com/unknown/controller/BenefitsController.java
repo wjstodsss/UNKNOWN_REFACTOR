@@ -47,15 +47,14 @@ public class BenefitsController {
 
 	@GetMapping("/register")
 	public void register() {
-		// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// µî·Ï ÆäÀÌÁö¸¦ º¸¿©ÁÜ
 	}
 
 	@PostMapping("/register")
 	public String register(BenefitsVO benefitsVO, HttpSession session, RedirectAttributes rttr) {
 	    MemberVO currentMember = (MemberVO) session.getAttribute("member");
 	    if (currentMember == null) {
-	    	return "redirect:/member/login";
-//	        throw new IllegalStateException("No authenticated user found in session");
+	        throw new IllegalStateException("No authenticated user found in session");
 	    }
 
 	    String currentUserName = currentMember.getMemberId();
